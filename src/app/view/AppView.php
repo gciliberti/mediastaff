@@ -63,7 +63,22 @@ EOT;
               <a href="${hrefAddDoc}" class="adddoc"> <img src="#" alt="plus"> Ajouter un document</a>
           </nav>
       </main>
+EOT;
+    return $html;
+    }
 
+    public function renderReturn(){
+
+
+
+      $html = "";
+      $html .= <<<EOT
+      <main id="return">
+          <form action="" name="return">
+              <input type="text" name="ref" placeholder="Référence">
+              <button type="submit">Valider</button>
+          </form>
+      </main>
 EOT;
     return $html;
     }
@@ -79,6 +94,10 @@ EOT;
               break;
             case 'borrow':
               $navBar = $this->renderHeader();
+              break;
+            case 'return' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderReturn();
               break;
             default:
                 $content = $this->renderHome();

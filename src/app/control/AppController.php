@@ -19,6 +19,8 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function viewReturn(){
+    $vue = new \app\view\AppView();
+    $vue->render("return");
 
   }
 
