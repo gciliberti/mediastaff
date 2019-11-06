@@ -14,7 +14,8 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function viewBorrow(){
-
+    $vue = new \app\view\AppView();
+    $vue->render("borrow");
   }
 
   public function viewReturn(){

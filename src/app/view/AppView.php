@@ -9,9 +9,19 @@ class AppView extends \mf\view\AbstractView
 
     private function renderHeader()
     {
-
+      $html = "";
+      $app_root = (new \mf\utils\HttpRequest())->root;//Pour aller chercher les images
+      $objRout = new \mf\router\Router();
+      $hrefRetour = $objRout->urlFor('home');
+      $html .= <<<EOT
+      <nav>
+        <a href="${hrefRetour}" class="back">
+          <img src="${app_root}/html/img/back.svg" width="32" height="32" alt="fleche de retour">
+        </a>
+      </nav>
+EOT;
+      return $html;
     }
-
 
     private function renderFooter()
     {
@@ -65,9 +75,11 @@ EOT;
         $navBar = "";
         switch ($selector) {
             case 'home':
-                $navBar = $this->renderHeader();
-                $content = $this->renderHome();
-                break;
+              $content = $this->renderHome();
+              break;
+            case 'borrow':
+              $navBar = $this->renderHeader();
+              break;
             default:
                 $content = $this->renderHome();
                 break;
