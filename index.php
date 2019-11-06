@@ -36,32 +36,32 @@ $router->addRoute('borrow',
 $router->addRoute('return',
 '/return/',
 '\app\control\AppController',
-'viewProfile',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+'viewReturn',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 $router->addRoute('addDoc',
 '/addDoc/',
 '\app\control\AppController',
-'viewMedia',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+'viewAddDoc',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 $router->addRoute('users',
 '/users/',
 '\app\control\AppController',
-'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+'viewUserRegister',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 $router->addRoute('viewUser',
 '/viewUser/',
 '\app\control\AppController',
-'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+'viewUserInfo',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 $router->addRoute('borrowSummary',
 '/borrowSummary/',
 '\app\control\AppController',
-'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+'viewBorrowSummary',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 $router->addRoute('returnSummary',
 '/returnSummary/',
 '\app\control\AppController',
-'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+'viewReturnSummary',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 
 $router->setDefaultRoute('/home/');
