@@ -8,6 +8,8 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function viewHome(){
+    $vue = new \app\view\AppView();
+    $vue->render("home");
 
   }
 
@@ -36,6 +38,6 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function viewReturnSummary(){
-    
+
   }
 }
