@@ -68,9 +68,6 @@ EOT;
     }
 
     public function renderReturn(){
-
-
-
       $html = "";
       $html .= <<<EOT
       <main id="return">
@@ -83,6 +80,29 @@ EOT;
     return $html;
     }
 
+    public function renderBorrow(){
+      $html = "";
+      $html .= <<<EOT
+      <main id="borrow">
+          <form action="" name="borrow">
+              <div class="container borrow">
+                  <div class="item borrow">
+                      <input type="text" placeholder="Numéro d'adhérent">
+                  </div>
+                  <div class="item borrow">
+                      <input type="text" placeholder="Référence du document">
+                  </div>
+              </div>
+              <div class="item borrow">
+                  <label for="dateRendu">Date de rendu</label>
+                  <input type="date" id="dateRendu">
+                  <button type="submit">Valider</button>
+              </div>
+          </form>
+      </main>
+EOT;
+    return $html;
+    }
 
     protected function renderBody($selector)
     {
@@ -94,6 +114,7 @@ EOT;
               break;
             case 'borrow':
               $navBar = $this->renderHeader();
+              $content = $this->renderBorrow();
               break;
             case 'return' :
               $navBar = $this->renderHeader();
