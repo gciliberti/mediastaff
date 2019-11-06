@@ -24,52 +24,45 @@ $router = new \mf\router\Router();
 $router->addRoute('home',
 '/home/',
 '\app\control\AppController',
-'viewHome',\app\auth\AppAuthentification::ACCESS_LEVEL_USER);
+'viewHome',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
-$router->addRoute('login',
-'/login/',
-'\app\control\AppAuthController',
-'login',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
-$router->addRoute('checklogin',
-'/checklogin/',
-'\app\control\AppAuthController',
-'checkLogin',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
-
-$router->addRoute('register',
-'/register/',
-'\app\control\AppAuthController',
-'register',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
-
-$router->addRoute('checkregister',
-'/checkregister/',
-'\app\control\AppAuthController',
-'checkRegister',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
 $router->addRoute('borrow',
 '/borrow/',
 '\app\control\AppController',
-'viewBorrow',\app\auth\AppAuthentification::ACCESS_LEVEL_USER);
+'viewBorrow',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
-$router->addRoute('profile',
-'/profile/',
+$router->addRoute('return',
+'/return/',
 '\app\control\AppController',
 'viewProfile',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
-$router->addRoute('view',
-'/view/',
+$router->addRoute('addDoc',
+'/addDoc/',
 '\app\control\AppController',
-'viewMedia',\app\auth\AppAuthentification::ACCESS_LEVEL_USER);
+'viewMedia',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
-$router->addRoute('logout',
-'/logout/',
-'\app\control\AppAuthController',
-'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_USER);
+$router->addRoute('users',
+'/users/',
+'\app\control\AppController',
+'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
-$router->addRoute('modify',
-          '/modify/',
-          '\app\control\AppController',
-          'viewModify',\app\auth\AppAuthentification::ACCESS_LEVEL_USER);
+$router->addRoute('viewUser',
+'/viewUser/',
+'\app\control\AppController',
+'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+$router->addRoute('borrowSummary',
+'/borrowSummary/',
+'\app\control\AppController',
+'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+$router->addRoute('returnSummary',
+'/returnSummary/',
+'\app\control\AppController',
+'logout',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
 
 $router->setDefaultRoute('/home/');
 
