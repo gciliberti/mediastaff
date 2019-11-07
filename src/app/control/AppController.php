@@ -21,12 +21,12 @@ class AppController extends \mf\control\AbstractController
         $vue = new \app\view\AppView();
         $http = new \mf\utils\HttpRequest();
         if (isset($http->post['numAdherent'])) {//si on vient de userBorrow
-            $_SESSION['idBorrower'] = $http->post['numAdherent'];//On initialise les variables de session
+            $_SESSION['idBorrower'] = filter_var($http->post['numAdherent'],FILTER_SANITIZE_STRING);//On initialise les variables de session
             $_SESSION['listeEmprunt'] = array();
         } else {
             if (isset($_SESSION['idBorrower'])) {//si on vient de Borrow
                 if (isset($http->post['mediaRef'])) {//si la ref a bien été remplie
-                    $_SESSION['listeEmprunt'][] = $http->post['mediaRef'];
+                    $_SESSION['listeEmprunt'][] = filter_var($http->post['mediaRef'],FILTER_SANITIZE_STRING);
                     if (isset($http->post["valider"])) {//si on a validé on envoi sur checkBorrow
                         $this->checkBorrow();
                         return;
@@ -110,7 +110,9 @@ class AppController extends \mf\control\AbstractController
         foreach ($_SESSION['listeEmprunt'] as $emprunt) {
             $countMedia = \app\model\Media::where('reference', '=', $emprunt)->count();
             if ($countMedia != 1) {//Le media n'existe pas
-                $vue->render("borrow");
+                unset($_SESSION['listeEmprunt']);
+                unset($_SESSION['idBorrower']);
+                $vue->render('viewBorrowUser');
                 return;
             }
             $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
@@ -125,9 +127,10 @@ class AppController extends \mf\control\AbstractController
             $borrow->save();
             $mediaId->save();
         }
-        $this->viewBorrowSummary();
-    }
+             $this->viewBorrowSummary();
 
+    }
+      
     public function viewUserInfo()
     {
         $num = filter_var($_GET['num'], FILTER_SANITIZE_NUMBER_INT);
