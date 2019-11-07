@@ -176,10 +176,8 @@ EOT;
 
 
         $html .= <<<EOT
-
             <main id="users">
                 <div class="container users" style="border-bottom: 2px solid black">
-
 EOT;
 
 
@@ -197,7 +195,6 @@ EOT;
             }
 
             $html .= <<<EOT
- 
              <div class="item__user__container">
                   <img src="${picture}" alt="photo de profil" width="50px" height="auto">
                   <p>Adherent numéro : ${num}</p>
@@ -259,7 +256,6 @@ EOT;
             $postalcode = $user->postalcode;
             $tel = $user->phone;
 
-            echo 'hello';
 
             $html .= <<<EOT
 
