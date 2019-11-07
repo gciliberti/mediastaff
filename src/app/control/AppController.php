@@ -130,7 +130,7 @@ class AppController extends \mf\control\AbstractController
              $this->viewBorrowSummary();
 
     }
-      
+
     public function viewUserInfo()
     {
         $num = filter_var($_GET['num'], FILTER_SANITIZE_NUMBER_INT);
@@ -178,6 +178,8 @@ class AppController extends \mf\control\AbstractController
         $iduser = $_SESSION['idBorrower'];
         $vue = new \app\view\AppView($iduser);
         $vue->render("borrowsummary");
+        unset($_SESSION['idBorrower']);
+        unset($_SESSION['listeEmprunt']);
 
     }
 
