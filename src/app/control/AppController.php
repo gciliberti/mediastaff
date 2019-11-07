@@ -37,11 +37,7 @@ class AppController extends \mf\control\AbstractController
         $vue->render("borrow");
 
     }
-  public function viewReturn(){
 
-    $vue = new \app\view\AppView();
-    $vue->render("return");
-  }
     public function viewBorrowUser()
     {
         $vue = new \app\view\AppView();
@@ -66,7 +62,7 @@ class AppController extends \mf\control\AbstractController
     {
 
         if (!empty($_GET['accept']) || !empty($_GET['delete'])) {
-          
+
             \mf\router\Router::executeRoute('userModify');
         } else {
             $users = \app\model\User::where('isvalidated', '=', 0)->get();
@@ -180,13 +176,6 @@ class AppController extends \mf\control\AbstractController
     {
         $vue = new \app\view\AppView();
         $vue->render("borrowsummary");
-
-    }
-
-    public function viewReturnSummary()
-    {
-        $vue = new \app\view\AppView();
-        $vue->render("returnsummary");
 
     }
 
