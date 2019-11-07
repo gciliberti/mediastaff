@@ -155,6 +155,7 @@ class AppController extends \mf\control\AbstractController
 
 
     header('location: '.$url);
+  }
 
 
     //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
@@ -170,19 +171,6 @@ class AppController extends \mf\control\AbstractController
     {
         $vue = new \app\view\AppView();
         $vue->render("returnsummary");
-
-    }
-
-    public function checkBorrow()
-    {
-        //Doit ajouter un nouvel emprunt et rediriger vers borrowsummary
-
-    }
-
-
-    public function checkDoc()
-    {
-        //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
 
     }
 
