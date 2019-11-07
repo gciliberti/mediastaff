@@ -2,16 +2,19 @@
 
 namespace app\control;
 
-class AppController extends \mf\control\AbstractController {
-  public function __construct(){
-    parent::__construct();
-  }
+class AppController extends \mf\control\AbstractController
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-  public function viewHome(){
-    $vue = new \app\view\AppView();
-    $vue->render("home");
+    public function viewHome()
+    {
+        $vue = new \app\view\AppView();
+        $vue->render("home");
 
-  }
+    }
 
   public function viewBorrow(){
     $vue = new \app\view\AppView();
@@ -43,37 +46,45 @@ class AppController extends \mf\control\AbstractController {
     $vue = new \app\view\AppView();
     $vue->render("return");
 
-  }
+    }
 
-  public function viewAddDoc(){
-    $vue = new \app\view\AppView();
-    $vue->render("adddoc");
+    public function viewAddDoc()
+    {
+        $vue = new \app\view\AppView();
+        $vue->render("adddoc");
 
-  }
+    }
 
-  public function viewUserRegister(){
-    $vue = new \app\view\AppView();
-    $vue->render("userregister");
+    public function viewUserRegister()
+    {
 
-  }
+        if (!empty($_GET['accept']) || !empty($_GET['delete'])) {
+            \mf\router\Router::executeRoute('userModify');
+        }
+        $users = \app\model\User::where('isvalidated', '=', 0)->get();
+        $vue = new \app\view\AppView($users);
+        $vue->render("userregister");
 
-  public function viewUserInfo(){
-    $vue = new \app\view\AppView();
-    $vue->render("userinfo");
 
-  }
+    }
 
-  public function viewBorrowSummary(){
-    $vue = new \app\view\AppView();
-    $vue->render("borrowsummary");
+    public function viewUserModify()
+    {
 
-  }
+        if (!empty($_GET['accept'])) {
+            $user = \app\model\User::where('id', '=', $_GET['accept'])->first();
+            $user->isvalidated = 1;
+            $user->save();
+            unset ($_GET['accept']);
+            \mf\router\Router::executeRoute('users');
+        } elseif (!empty($_GET['delete'])) {
+            $user = \app\model\User::where('id', '=', $_GET['delete'])->first();
+            $user->delete();
 
-  public function viewReturnSummary(){
-    $vue = new \app\view\AppView();
-    $vue->render("returnsummary");
-
-  }
+            unset ($_GET['delete']);
+            \mf\router\Router::executeRoute('users');
+        }
+    }
 
   public function checkBorrow(){
     $http = new \mf\utils\HttpRequest();
@@ -106,7 +117,13 @@ class AppController extends \mf\control\AbstractController {
     $vue->render("borrowSummary");
   }
 
-
+    public function viewUserInfo()
+    {
+        $num = filter_var($_GET['num'], FILTER_SANITIZE_NUMBER_INT);
+        $user = \app\model\User::where('id', '=', $num)->first();
+        $vue = new \app\view\AppView($user);
+        $vue->render("userinfo");
+    }
   public function checkDoc(){
     $route = new \mf\router\Router();
     $url = $route->urlFor('home');
@@ -142,9 +159,35 @@ class AppController extends \mf\control\AbstractController {
 
     //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
 
-  }
+    public function viewBorrowSummary()
+    {
+        $vue = new \app\view\AppView();
+        $vue->render("borrowsummary");
 
-  public function checkReturn(){
-    //Doit effectuer un retour en BDD et rediriger vers returnSummary
-  }
+    }
+
+    public function viewReturnSummary()
+    {
+        $vue = new \app\view\AppView();
+        $vue->render("returnsummary");
+
+    }
+
+    public function checkBorrow()
+    {
+        //Doit ajouter un nouvel emprunt et rediriger vers borrowsummary
+
+    }
+
+
+    public function checkDoc()
+    {
+        //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
+
+    }
+
+    public function checkReturn()
+    {
+        //Doit effectuer un retour en BDD et rediriger vers returnSummary
+    }
 }
