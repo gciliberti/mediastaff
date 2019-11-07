@@ -279,14 +279,14 @@ EOT;
             $html .= <<<EOT
            <div class="error">
                 <p>Attention l'adhérent numéro ${num} n'éxiste pas !</p>
-           
+
            </div>
 EOT;
         }
 
 
         $html .= <<<EOT
-          
+
       </main>
 EOT;
         return $html;
@@ -294,25 +294,40 @@ EOT;
 
     private function renderBorrowSummary()
     {
+        $iduser = $this->data;
         $router = new \mf\router\Router();
         $hrefHome = $router->urlFor('home');
+        $iduser = $this->data;
+        $user = \app\model\User::where('id','=',$iduser)->first();
+
+        $possessed = $user->borrownotreturned()->get();
+        $name = $user->name;
+        $surname = $user->surname;
+        $possessedborrows = '';
+        foreach($possessed as $borrow)
+        {
+          $title="";
+          $date = $borrow->borrow_date_end;
+          $borrow = $borrow->media()->get();
+          foreach($borrow as $media)
+          {
+            $title = $media->title;
+          }
+
+
+          $possessedborrows .= <<< EOT
+          <ul class="flex_container">
+              <li>${title}</li>
+              <li>A rendre le ${date}</li>
+          </ul>
+EOT;
+        }
         $html = "";
         $html .= <<<EOT
       <main id="recap_borrow">
           <div>
-              <h3>Adhérent numéro 14</h3>
-              <ul class="flex_container">
-                  <li>Titre 1</li>
-                  <li>A retourner le 22/10</li>
-              </ul>
-              <ul class="flex_container">
-                  <li>Titre 3</li>
-                  <li>A retourner le 22/10</li>
-              </ul>
-              <ul class="flex_container">
-                  <li>Titre 4</li>
-                  <li>A retourner le 22/10</li>
-              </ul>
+              <h3>Adhérent n° ${iduser}, ${name} ${surname} </h3>
+                ${possessedborrows}
           </div>
           <nav>
               <a href="${hrefHome}" id="nav_recap_borrow">ok</a>

@@ -125,7 +125,7 @@ class AppController extends \mf\control\AbstractController
             $borrow->save();
             $mediaId->save();
         }
-        $vue->render("borrowSummary");
+        $this->viewBorrowSummary();
     }
 
     public function viewUserInfo()
@@ -170,11 +170,10 @@ class AppController extends \mf\control\AbstractController
     }
 
 
-    //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
-
     public function viewBorrowSummary()
     {
-        $vue = new \app\view\AppView();
+        $iduser = $_SESSION['idBorrower'];
+        $vue = new \app\view\AppView($iduser);
         $vue->render("borrowsummary");
 
     }
