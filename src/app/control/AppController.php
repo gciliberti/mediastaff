@@ -109,28 +109,30 @@ class AppController extends \mf\control\AbstractController
         }
         foreach ($_SESSION['listeEmprunt'] as $emprunt) {
             $countMedia = \app\model\Media::where('reference', '=', $emprunt)->count();
+            $countMediaDispo = \app\model\Media::where('reference', '=', $emprunt)->where('disponibility','=',1)->count();
             if ($countMedia != 1) {//Le media n'existe pas
-                unset($_SESSION['listeEmprunt']);
-                unset($_SESSION['idBorrower']);
-                $vue->render('viewBorrowUser');
-                return;
+
+            }else if($countMediaDispo!=1){//si le media est déjà emprunté ou indisponible
+
+            }else
+            {
+              $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
+              $mediaId->disponibility = 2;//Le media est emprunté
+              $borrow = new \app\model\Borrow();
+              $dateDuJour = date("Y/m/d");
+              $dateRendu = date('Y-m-d', strtotime($dateDuJour . ' + 14 days'));
+              $borrow->borrow_date_end = $dateRendu;
+              $borrow->returned = 0;
+              $borrow->id_user = $numAdherent;
+              $borrow->id_media = $mediaId->id;
+              $borrow->save();
+              $mediaId->save();
             }
-            $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
-            $mediaId->disponibility = 2;//Le media est emprunté
-            $borrow = new \app\model\Borrow();
-            $dateDuJour = date("Y/m/d");
-            $dateRendu = date('Y-m-d', strtotime($dateDuJour . ' + 14 days'));
-            $borrow->borrow_date_end = $dateRendu;
-            $borrow->returned = 0;
-            $borrow->id_user = $numAdherent;
-            $borrow->id_media = $mediaId->id;
-            $borrow->save();
-            $mediaId->save();
         }
              $this->viewBorrowSummary();
 
     }
-      
+
     public function viewUserInfo()
     {
         $num = filter_var($_GET['num'], FILTER_SANITIZE_NUMBER_INT);
