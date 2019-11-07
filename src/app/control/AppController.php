@@ -37,7 +37,11 @@ class AppController extends \mf\control\AbstractController
         $vue->render("borrow");
 
     }
+  public function viewReturn(){
 
+    $vue = new \app\view\AppView();
+    $vue->render("return");
+  }
     public function viewBorrowUser()
     {
         $vue = new \app\view\AppView();
@@ -85,11 +89,17 @@ class AppController extends \mf\control\AbstractController
             $user = \app\model\User::where('id', '=', $_GET['delete'])->first();
             $user->delete();
 
+
             unset ($_GET['delete']);
             \mf\router\Router::executeRoute('users');
         }
     }
 
+
+    public function viewReturnSummary($iduser=null){
+        $vue = new \app\view\AppView($iduser);
+        $vue->render("returnsummary");
+    }
     public function checkBorrow()
     {
         $http = new \mf\utils\HttpRequest();
@@ -180,8 +190,39 @@ class AppController extends \mf\control\AbstractController
 
     }
 
-    public function checkReturn()
-    {
-        //Doit effectuer un retour en BDD et rediriger vers returnSummary
+  public function checkReturn(){
+    //Doit effectuer un retour en BDD et rediriger vers returnSummary
+    try{
+      $http = new \mf\utils\HttpRequest();
+      $reference = filter_var($http->post["ref"],FILTER_SANITIZE_STRING);
+      $media =  \app\model\Media::where('reference','=',$reference)->first();
+      if($media != null)
+      {
+          $return = $media->borrownotreturned()->first();
+          if($return != null)
+          {
+            $iduser = $return->id_user;
+            $return->returned = 1;
+            $return->save();
+            $this->viewReturnSummary($iduser);
+          }
+          else{
+            $vue = new \app\view\AppView();
+            $vue->render("return");
+          }
+      }
+      else{
+        $vue = new \app\view\AppView();
+        $vue->render("return");
+      }
+
     }
+    catch(\Exception $e)
+    {
+
+      $vue = new \app\view\AppView($e);
+      $vue->render("return");
+    }
+
+  }
 }
