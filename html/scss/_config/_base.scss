@@ -3,19 +3,20 @@
 
 // initialisation des variables
 
-$primarycolor: #34B3AA;
-$secondarycolor: #787878;
-$terciarycolor: #E8E8E8;
-
 $font: 'Roboto', sans-serif;
 
 
 html {
   font-family: 'Roboto', sans-serif;
 
-  .flex_container{
+  .flex_container {
     display: flex;
   }
+
+  .grid_container {
+    display: grid;
+  }
+
 
 
 }

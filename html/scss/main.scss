@@ -1,9 +1,13 @@
 //import fichier de config
-
 @import "_config/reset";
 @import "_config/base";
-
-
 //import des templates
-
-@import "_template/nav";
+@import "_template/adddoc";
+@import "_template/borrow";
+@import "_template/borrow_summary";
+@import "_template/home_nav";
+@import "_template/return";
+@import "_template/return_summary";
+@import "_template/userborrow";
+@import "_template/userdetail";
+@import "_template/users";
