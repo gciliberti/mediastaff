@@ -63,6 +63,21 @@ $router->addRoute('returnSummary',
 '\app\control\AppController',
 'viewReturnSummary',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
+$router->addRoute('checkReturn',
+'/checkreturn/',
+'\app\control\AppController',
+'checkReturn',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+$router->addRoute('checkBorrow',
+'/checkborrow/',
+'\app\control\AppController',
+'checkBorrow',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+$router->addRoute('checkDoc',
+'/checkdoc/',
+'\app\control\AppController',
+'checkDoc',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
 
 $router->setDefaultRoute('/home/');
 

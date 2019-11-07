@@ -81,10 +81,12 @@ EOT;
     }
 
     public function renderBorrow(){
+      $router = new \mf\router\Router();
+      $hrefCheckBorrow = $routeur->urlFor('checkBorrow');
       $html = "";
       $html .= <<<EOT
       <main id="borrow">
-          <form action="" name="borrow">
+          <form action="${hrefCheckBorrow}" name="borrow">
               <div class="container borrow">
                   <div class="item borrow">
                       <input type="text" placeholder="Numéro d'adhérent">
@@ -104,6 +106,141 @@ EOT;
     return $html;
     }
 
+    private function renderAddDoc(){
+      $router = new \mf\router\Router();
+      $hrefCheckDoc = $routeur->urlFor('checkDoc');
+          //je n'ai pas le html pour celle la
+      $html = "";
+      $html .= <<<EOT
+
+EOT;
+    return $html;
+    }
+
+    private function renderUserRegister(){
+      $html = "";
+      $html .= <<<EOT
+      <main id="users">
+          <div class="container users">
+              <div class="item__user__container">
+                  <img src="" alt="photo de profil">
+                  <p>adherent numéro 9</p>
+                  <p>Prénom Nom</p>
+                  <img src="" alt=check">
+                  <img src="" alt=cross">
+              </div>
+          </div>
+
+          <div class="flex_container">
+              <nav>
+                  <a href="">Créer un adhérent</a>
+              </nav>
+              <div class="item">
+                  <h3>Informations sur un adhérent :</h3>
+                  <form class="flex_container" action="" id="info_adherent">
+                      <input type="number" placeholder="Numéro d'adhérent">
+                      <button type="submit">ok</button>
+                  </form>
+              </div>
+          </div>
+      </main>
+EOT;
+    return $html;
+    }
+
+    private function renderUserInfo(){
+      $html = "";
+      $html .= <<<EOT
+      <main id="profil_user">
+          <div class="info">
+              <ul>
+                  <li>Corentin Roy</li>
+                  <li>Pryxs</li>
+                  <li>corentin@gmail.com</li>
+              </ul>
+          </div>
+          <div class="where">
+              <ul>
+                  <li>4 chemin des Andalouses</li>
+                  <li>54000 Nancy</li>
+                  <li>0651513256</li>
+              </ul>
+          </div>
+      </main>
+EOT;
+    return $html;
+    }
+
+    private function renderBorrowSummary(){
+      $router = new \mf\router\Router();
+      $hrefHome = $routeur->urlFor('home');
+      $html = "";
+      $html .= <<<EOT
+      <main id="recap_borrow">
+          <div>
+              <h3>Adhérent numéro 14</h3>
+              <ul class="flex_container">
+                  <li>Titre 1</li>
+                  <li>A retourner le 22/10</li>
+              </ul>
+              <ul class="flex_container">
+                  <li>Titre 3</li>
+                  <li>A retourner le 22/10</li>
+              </ul>
+              <ul class="flex_container">
+                  <li>Titre 4</li>
+                  <li>A retourner le 22/10</li>
+              </ul>
+          </div>
+          <nav>
+              <a href="${hrefHome}" id="nav_recap_borrow">ok</a>
+          </nav>
+      </main>
+EOT;
+    return $html;
+    }
+
+    private function renderReturnSummary(){
+      $router = new \mf\router\Router();
+      $hrefHome = $routeur->urlFor('home');
+      $html = "";
+      $html .= <<<EOT
+      <main id="recap_return">
+          <h2>Adhérent</h2>
+          <div class="flex_container">
+              <div class="item__return">
+                  <h3>Documents retournés</h3>
+                  <ul class="flex_container">
+                      <li>Titre 1</li>
+                      <li>Retourné le 22/10</li>
+                  </ul>
+                  <ul class="flex_container">
+                      <li>Titre 3</li>
+                      <li>Retourné le 22/10</li>
+                  </ul>
+                  <ul class="flex_container">
+                      <li>Titre 4</li>
+                      <li>Retourné le 22/10</li>
+                  </ul>
+              </div>
+              <div class="item__return">
+                  <h3>Documents possédés</h3>
+
+                  <ul class="flex_container">
+                      <li>Titre 1</li>
+                      <li>A retourner le 22/10</li>
+                  </ul>
+              </div>
+          </div>
+          <nav>
+              <a href="${hrefHome}" id="nav_recap_borrow">ok</a>
+          </nav>
+      </main>
+EOT;
+    return $html;
+
+    }
+
     protected function renderBody($selector)
     {
         $content = "";
@@ -120,6 +257,32 @@ EOT;
               $navBar = $this->renderHeader();
               $content = $this->renderReturn();
               break;
+
+            case 'adddoc' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderAddDoc();
+              break;
+
+            case 'userregister' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderUserRegister();
+              break;
+
+            case 'userinfo' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderUserInfo();
+              break;
+
+            case 'borrowsummary' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderBorrowSummary();
+              break;
+
+            case 'returnsummary' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderReturnSummary();
+              break;
+
             default:
                 $content = $this->renderHome();
                 break;
