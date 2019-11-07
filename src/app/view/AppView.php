@@ -144,6 +144,23 @@ EOT;
           //je n'ai pas le html pour celle la
       $html = "";
       $html .= <<<EOT
+      <main id="addDoc">
+          <form method="post" action="${hrefCheckDoc}" name="addDoc" enctype="multipart/form-data">
+              <div class="container addDoc">
+                <input required id="title" name="title" value="" placeholder="titre">
+                <input required id="ref" name="ref" value="" placeholder="référence">
+                <input required id="type" name="type" value="" placeholder="type">
+                <input required id="genre" name="genre" value="" placeholder="genre">
+                <input required id="keywords" name="keywords" value="" placeholder="mots clefs">
+                <div class="picture">
+                  <label for="file" class="label-file">ajouter une image</label>
+                  <input required id="file" type="file" name="fileToUpload">
+                </div>
+                <textarea required id="description" name="description" value="" placeholder="déscription"></textarea>
+                <button type="submit">Valider</button>
+              </div>
+          </form>
+      </main>
 
 EOT;
     return $html;

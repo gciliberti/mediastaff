@@ -108,6 +108,38 @@ class AppController extends \mf\control\AbstractController {
 
 
   public function checkDoc(){
+    $route = new \mf\router\Router();
+    $url = $route->urlFor('home');
+    $post = $this->request->post;
+
+    $title = filter_var($post["title"],FILTER_SANITIZE_STRING);
+    $ref = filter_var($post["ref"],FILTER_SANITIZE_STRING);
+    $type = filter_var($post["type"],FILTER_SANITIZE_STRING);
+    $genre = filter_var($post["genre"],FILTER_SANITIZE_STRING);
+    $keywords = filter_var($post["keywords"],FILTER_SANITIZE_STRING);
+    $description = filter_var($post["description"],FILTER_SANITIZE_STRING);
+    $picture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
+
+    $testRef = \app\model\Media::where('reference', '=', $ref)->count();
+    if($testRef == 0){
+      $media = new \app\model\Media();
+      $media->title = $title;
+      $media->reference = $ref;
+      $media->genre = $genre;
+      $media->type = $type;
+      $media->keywords = $keywords;
+      $media->description = $description;
+      $media->picture = $picture;
+      $media->disponibility = 1;
+      $media->save();
+    } else {
+      //echo "reference deja existante";
+    }
+
+
+    header('location: '.$url);
+
+
     //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
 
   }
