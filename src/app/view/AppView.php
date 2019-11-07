@@ -9,18 +9,18 @@ class AppView extends \mf\view\AbstractView
 
     private function renderHeader()
     {
-      $html = "";
-      $app_root = (new \mf\utils\HttpRequest())->root;//Pour aller chercher les images
-      $objRout = new \mf\router\Router();
-      $hrefRetour = $objRout->urlFor('home');
-      $html .= <<<EOT
+        $html = "";
+        $app_root = (new \mf\utils\HttpRequest())->root;//Pour aller chercher les images
+        $objRout = new \mf\router\Router();
+        $hrefRetour = $objRout->urlFor('home');
+        $html .= <<<EOT
       <nav>
         <a href="${hrefRetour}" class="back">
           <img src="${app_root}/html/img/back.svg" width="32" height="32" alt="fleche de retour">
         </a>
       </nav>
 EOT;
-      return $html;
+        return $html;
     }
 
     private function renderFooter()
@@ -28,16 +28,17 @@ EOT;
 
     }
 
-    public function renderHome(){
-      $route = new \mf\router\Router();
-      $hrefBorrow = $route->urlFor('borrow');
-      $hrefAddDoc = $route->urlFor('addDoc');
-      $hrefReturn = $route->urlFor('return');
-      $hrefUsers = $route->urlFor('users');
+    public function renderHome()
+    {
+        $route = new \mf\router\Router();
+        $hrefBorrow = $route->urlFor('borrow');
+        $hrefAddDoc = $route->urlFor('addDoc');
+        $hrefReturn = $route->urlFor('return');
+        $hrefUsers = $route->urlFor('users');
 
 
-      $html = "";
-      $html .= <<< EOT
+        $html = "";
+        $html .= <<< EOT
       <main id="home">
           <nav>
               <div class="container">
@@ -64,14 +65,15 @@ EOT;
           </nav>
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    public function renderReturn(){
-      $router = new \mf\router\Router();
-      $hrefCheckReturn = $router->urlFor('checkReturn');
-      $html = "";
-      $html .= <<<EOT
+    public function renderReturn()
+    {
+        $router = new \mf\router\Router();
+        $hrefCheckReturn = $router->urlFor('checkReturn');
+        $html = "";
+        $html .= <<<EOT
       <main id="return">
           <form action="${hrefCheckReturn}" name="return">
               <input type="text" name="ref" placeholder="Référence">
@@ -79,14 +81,15 @@ EOT;
           </form>
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    public function renderBorrow(){
-      $router = new \mf\router\Router();
-      $hrefCheckBorrow = $router->urlFor('checkBorrow');
-      $html = "";
-      $html .= <<<EOT
+    public function renderBorrow()
+    {
+        $router = new \mf\router\Router();
+        $hrefCheckBorrow = $router->urlFor('checkBorrow');
+        $html = "";
+        $html .= <<<EOT
       <main id="borrow">
           <form action="${hrefCheckBorrow}" name="borrow">
               <div class="container borrow">
@@ -105,32 +108,68 @@ EOT;
           </form>
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    private function renderAddDoc(){
-      $router = new \mf\router\Router();
-      $hrefCheckDoc = $router->urlFor('checkDoc');
-          //je n'ai pas le html pour celle la
-      $html = "";
-      $html .= <<<EOT
+    private function renderAddDoc()
+    {
+        $router = new \mf\router\Router();
+        $hrefCheckDoc = $router->urlFor('checkDoc');
+        //je n'ai pas le html pour celle la
+        $html = "";
+        $html .= <<<EOT
 
 EOT;
-    return $html;
+        return $html;
     }
 
-    private function renderUserRegister(){
-      $html = "";
-      $html .= <<<EOT
-      <main id="users">
-          <div class="container users">
-              <div class="item__user__container">
-                  <img src="" alt="photo de profil">
-                  <p>adherent numéro 9</p>
-                  <p>Prénom Nom</p>
-                  <img src="" alt=check">
-                  <img src="" alt=cross">
+    private function renderUserRegister()
+    {
+        $html = "";
+        $users = $this->data;
+        $router = new \mf\router\Router();
+        $hrefViewUser = $router->urlFor('viewUser');
+
+
+        $html .= <<<EOT
+
+            <main id="users">
+                <div class="container users" style="border-bottom: 2px solid black">
+
+EOT;
+
+
+        foreach ($users as $value) {
+            $surname = $value->surname;
+            $name = $value->name;
+            $num = $value->id;
+
+            $app_root = (new \mf\utils\HttpRequest())->root;
+            $picture = $value->photo;
+            if (empty($picture)) {
+                $picture = $app_root . "/html/img/avatar.svg";
+            } else {
+                $picture = "data:image/jpeg;base64," . base64_encode($value->photo);
+            }
+
+            $html .= <<<EOT
+ 
+             <div class="item__user__container">
+                  <img src="${picture}" alt="photo de profil" width="50px" height="auto">
+                  <p>Adherent numéro : ${num}</p>
+                  <p>${name} ${surname}</p>
+                  <form name="validate" method="get">
+                      <button type="submit" name="accept" value="${num}">
+                      <img src="${app_root}/html/img/success.svg" alt=check" width="50px" height="auto">
+                      </button>
+                      <button type="submit" name="delete" value="${num}">
+                      <img src="${app_root}/html/img/error.svg" alt=cross" width="50px" height="auto">
+                      </button>
+                  </form>
               </div>
+EOT;
+        }
+        $html .= <<<EOT
           </div>
 
           <div class="flex_container">
@@ -139,45 +178,86 @@ EOT;
               </nav>
               <div class="item">
                   <h3>Informations sur un adhérent :</h3>
-                  <form class="flex_container" action="" id="info_adherent">
-                      <input type="number" placeholder="Numéro d'adhérent">
+                  <form class="flex_container" action="${hrefViewUser}" id="info_adherent" method="get">
+                      <input type="number" placeholder="Numéro d'adhérent" name="num">
                       <button type="submit">ok</button>
                   </form>
               </div>
           </div>
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    private function renderUserInfo(){
-      $html = "";
-      $html .= <<<EOT
+    private function renderUserInfo()
+    {
+
+        $html = "";
+        $html .= <<<EOT
+
       <main id="profil_user">
-          <div class="info">
+
+
+EOT;
+
+
+        $user = $this->data;
+
+
+        $num = $_GET['num'];
+        if ($user != null) {
+            $name = $user->name;
+            $surname = $user->surname;
+            $username = $user->username;
+            $mail = $user->mail;
+            $adresse = $user->address;
+            $ville = $user->city;
+            $postalcode = $user->postalcode;
+            $tel = $user->phone;
+
+            echo 'hello';
+
+            $html .= <<<EOT
+
+           <div class="info">
               <ul>
-                  <li>Corentin Roy</li>
-                  <li>Pryxs</li>
-                  <li>corentin@gmail.com</li>
+                  <li>${name} ${surname}</li>
+                  <li>${username}</li>
+                  <li>${mail}</li>
               </ul>
           </div>
           <div class="where">
               <ul>
-                  <li>4 chemin des Andalouses</li>
-                  <li>54000 Nancy</li>
-                  <li>0651513256</li>
+                  <li>${adresse}</li>
+                  <li>${postalcode} ${ville}</li>
+                  <li>${tel}</li>
               </ul>
           </div>
+
+EOT;
+        } else {
+            $html .= <<<EOT
+           <div class="error">
+                <p>Attention l'adhérent numéro ${num} n'éxiste pas !</p>
+           
+           </div>
+EOT;
+        }
+
+
+        $html .= <<<EOT
+          
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    private function renderBorrowSummary(){
-      $router = new \mf\router\Router();
-      $hrefHome = $router->urlFor('home');
-      $html = "";
-      $html .= <<<EOT
+    private function renderBorrowSummary()
+    {
+        $router = new \mf\router\Router();
+        $hrefHome = $router->urlFor('home');
+        $html = "";
+        $html .= <<<EOT
       <main id="recap_borrow">
           <div>
               <h3>Adhérent numéro 14</h3>
@@ -199,14 +279,15 @@ EOT;
           </nav>
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    private function renderReturnSummary(){
-      $router = new \mf\router\Router();
-      $hrefHome = $router->urlFor('home');
-      $html = "";
-      $html .= <<<EOT
+    private function renderReturnSummary()
+    {
+        $router = new \mf\router\Router();
+        $hrefHome = $router->urlFor('home');
+        $html = "";
+        $html .= <<<EOT
       <main id="recap_return">
           <h2>Adhérent</h2>
           <div class="flex_container">
@@ -239,9 +320,10 @@ EOT;
           </nav>
       </main>
 EOT;
-    return $html;
+        return $html;
 
     }
+
 
     protected function renderBody($selector)
     {
@@ -249,42 +331,41 @@ EOT;
         $navBar = "";
         switch ($selector) {
             case 'home':
-              $content = $this->renderHome();
-              break;
+                $content = $this->renderHome();
+                break;
             case 'borrow':
-              $navBar = $this->renderHeader();
-              $content = $this->renderBorrow();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderBorrow();
+                break;
             case 'return' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderReturn();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderReturn();
+                break;
 
             case 'adddoc' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderAddDoc();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderAddDoc();
+                break;
 
             case 'userregister' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderUserRegister();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderUserRegister();
+                break;
 
             case 'userinfo' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderUserInfo();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderUserInfo();
+                break;
 
             case 'borrowsummary' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderBorrowSummary();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderBorrowSummary();
+                break;
 
             case 'returnsummary' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderReturnSummary();
-              break;
-
+                $navBar = $this->renderHeader();
+                $content = $this->renderReturnSummary();
+                break;
             default:
                 $content = $this->renderHome();
                 break;

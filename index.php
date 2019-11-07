@@ -48,6 +48,11 @@ $router->addRoute('users',
 '\app\control\AppController',
 'viewUserRegister',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
+$router->addRoute('userModify',
+    '/userModify/',
+    '\app\control\AppController',
+    'viewUserModify',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
 $router->addRoute('viewUser',
 '/viewUser/',
 '\app\control\AppController',
