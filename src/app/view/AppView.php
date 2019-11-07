@@ -68,6 +68,8 @@ EOT;
     }
 
     public function renderReturn(){
+      $router = new \mf\router\Router();
+      $hrefCheckBorrow = $router->urlFor('checkReturn');
       $html = "";
       $html .= <<<EOT
       <main id="return">
@@ -82,7 +84,7 @@ EOT;
 
     public function renderBorrow(){
       $router = new \mf\router\Router();
-      $hrefCheckBorrow = $routeur->urlFor('checkBorrow');
+      $hrefCheckBorrow = $router->urlFor('checkBorrow');
       $html = "";
       $html .= <<<EOT
       <main id="borrow">
@@ -108,7 +110,7 @@ EOT;
 
     private function renderAddDoc(){
       $router = new \mf\router\Router();
-      $hrefCheckDoc = $routeur->urlFor('checkDoc');
+      $hrefCheckDoc = $router->urlFor('checkDoc');
           //je n'ai pas le html pour celle la
       $html = "";
       $html .= <<<EOT
@@ -173,7 +175,7 @@ EOT;
 
     private function renderBorrowSummary(){
       $router = new \mf\router\Router();
-      $hrefHome = $routeur->urlFor('home');
+      $hrefHome = $router->urlFor('home');
       $html = "";
       $html .= <<<EOT
       <main id="recap_borrow">
@@ -202,7 +204,7 @@ EOT;
 
     private function renderReturnSummary(){
       $router = new \mf\router\Router();
-      $hrefHome = $routeur->urlFor('home');
+      $hrefHome = $router->urlFor('home');
       $html = "";
       $html .= <<<EOT
       <main id="recap_return">

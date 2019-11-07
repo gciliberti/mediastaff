@@ -55,14 +55,17 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function checkBorrow(){
+    //Doit ajouter un nouvel emprunt et rediriger vers borrowsummary
 
   }
 
-  public function checkSummary(){
-
-  }
 
   public function checkDoc(){
+    //Doit ajouter un doc en BDD (voir comment rediriger vers home après)
 
+  }
+
+  public function checkReturn(){
+    //Doit effectuer un retour en BDD et rediriger vers returnSummary
   }
 }
