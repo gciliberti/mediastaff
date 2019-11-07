@@ -15,7 +15,28 @@ class AppController extends \mf\control\AbstractController {
 
   public function viewBorrow(){
     $vue = new \app\view\AppView();
+    $http = new \mf\utils\HttpRequest();
+    if(isset($http->post['numAdherent'])){//si on vient de userBorrow
+      $_SESSION['idBorrower']=$http->post['numAdherent'];//On initialise les variables de session
+      $_SESSION['listeEmprunt']=array();
+    }else{
+      if(isset($_SESSION['idBorrower'])){//si on vient de Borrow
+        if(isset($http->post['mediaRef'])){//si la ref a bien été remplie
+          $_SESSION['listeEmprunt'][] = $http->post['mediaRef'];
+          if(isset($http->post["valider"])){//si on a validé on envoi sur checkBorrow
+            $this->checkBorrow();
+            return;
+          }
+        }
+      }
+    }
     $vue->render("borrow");
+
+  }
+
+  public function viewBorrowUser(){
+    $vue = new \app\view\AppView();
+    $vue->render("borrowUser");
   }
 
   public function viewReturn(){
@@ -55,8 +76,34 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function checkBorrow(){
-    //Doit ajouter un nouvel emprunt et rediriger vers borrowsummary
+    $http = new \mf\utils\HttpRequest();
+    $vue = new \app\view\AppView();
+    $numAdherent=$_SESSION['idBorrower'];
+    $countUser=\app\model\User::where('id','=',$numAdherent)->count();
 
+    if($countUser!=1){//L'utilisateur n'existe pas
+      $vue->render("borrowUser");
+      return;
+    }
+    foreach ($_SESSION['listeEmprunt'] as $emprunt) {
+      $countMedia=\app\model\Media::where('reference', '=', $emprunt)->count();
+      if($countMedia!=1){//Le media n'existe pas
+        $vue->render("borrow");
+        return;
+      }
+      $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
+      $mediaId->disponibility = 2;//Le media est emprunté
+      $borrow = new \app\model\Borrow();
+      $dateDuJour=date("Y/m/d");
+      $dateRendu = date('Y-m-d', strtotime($dateDuJour. ' + 14 days'));
+      $borrow->borrow_date_end=$dateRendu;
+      $borrow->returned=0;
+      $borrow->id_user=$numAdherent;
+      $borrow->id_media=$mediaId->id;
+      $borrow->save();
+      $mediaId->save();
+    }
+    $vue->render("borrowSummary");
   }
 
 

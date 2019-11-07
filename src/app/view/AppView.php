@@ -30,7 +30,7 @@ EOT;
 
     public function renderHome(){
       $route = new \mf\router\Router();
-      $hrefBorrow = $route->urlFor('borrow');
+      $hrefBorrowUser = $route->urlFor('borrowUser');
       $hrefAddDoc = $route->urlFor('addDoc');
       $hrefReturn = $route->urlFor('return');
       $hrefUsers = $route->urlFor('users');
@@ -41,7 +41,7 @@ EOT;
       <main id="home">
           <nav>
               <div class="container">
-                  <a href="${hrefBorrow}">
+                  <a href="${hrefBorrowUser}">
                       <div class="item__nav">
                           <img src="#" alt="icone emprunt">
                           <h2>Emprunt</h2>
@@ -82,25 +82,55 @@ EOT;
     return $html;
     }
 
-    public function renderBorrow(){
+    public function renderBorrowUser(){
       $router = new \mf\router\Router();
-      $hrefCheckBorrow = $router->urlFor('checkBorrow');
+      $hrefCheckBorrow = $router->urlFor('borrow');
+      $app_root = (new \mf\utils\HttpRequest())->root;
+
       $html = "";
       $html .= <<<EOT
       <main id="borrow">
-          <form action="${hrefCheckBorrow}" name="borrow">
+          <form method="POST" action="${hrefCheckBorrow}" name="userBorrow">
+              <div class="container userBorrow">
+                <div class="item userBorrow">
+                  <input type="text" name="numAdherent" placeholder="Numéro d'adhérent" required>
+                </div>
+                <div class="item userBorrow">
+                  <button type="submit">Valider</button>
+                </div>
+              </div>
+          </form>
+      </main>
+EOT;
+    return $html;
+    }
+
+    public function renderBorrow(){
+      $router = new \mf\router\Router();
+      $hrefBorrow = $router->urlFor('borrow');
+      $app_root = (new \mf\utils\HttpRequest())->root;
+      $listeEmprunt="";
+      if(!empty($_SESSION['listeEmprunt'])){
+        $listeEmprunt="<h4>Reference déjà ajoutée:</h2>";
+        foreach ($_SESSION['listeEmprunt'] as $emprunt) {
+          $listeEmprunt.="<li>".$emprunt."</li>";
+        }
+      }
+      $html = "";
+      $html .= <<<EOT
+      <main id="borrow">
+          <form method="POST" action="${hrefBorrow}" name="borrow">
               <div class="container borrow">
                   <div class="item borrow">
-                      <input type="text" placeholder="Numéro d'adhérent">
-                  </div>
-                  <div class="item borrow">
-                      <input type="text" placeholder="Référence du document">
+                      <input required name="mediaRef" type="text" placeholder="Référence du document">
+                      <input required name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+                      <ul>
+                        ${listeEmprunt}
+                      </ul>
                   </div>
               </div>
               <div class="item borrow">
-                  <label for="dateRendu">Date de rendu</label>
-                  <input type="date" id="dateRendu">
-                  <button type="submit">Valider</button>
+                  <button name="valider" type="submit">Valider</button>
               </div>
           </form>
       </main>
@@ -255,6 +285,10 @@ EOT;
               $navBar = $this->renderHeader();
               $content = $this->renderBorrow();
               break;
+            case 'borrowUser':
+                $navBar = $this->renderHeader();
+                $content = $this->renderBorrowUser();
+                break;
             case 'return' :
               $navBar = $this->renderHeader();
               $content = $this->renderReturn();

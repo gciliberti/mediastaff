@@ -33,6 +33,12 @@ $router->addRoute('borrow',
 '\app\control\AppController',
 'viewBorrow',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
+$router->addRoute('borrowUser',
+'/borrowUser/',
+'\app\control\AppController',
+'viewBorrowUser',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+
 $router->addRoute('return',
 '/return/',
 '\app\control\AppController',
