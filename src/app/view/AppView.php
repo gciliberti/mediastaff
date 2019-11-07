@@ -69,11 +69,11 @@ EOT;
 
     public function renderReturn(){
       $router = new \mf\router\Router();
-      $hrefCheckBorrow = $router->urlFor('checkReturn');
+      $hrefCheckReturn = $router->urlFor('checkReturn');
       $html = "";
       $html .= <<<EOT
       <main id="return">
-          <form action="" name="return">
+          <form action="${hrefCheckReturn}" name="return">
               <input type="text" name="ref" placeholder="Référence">
               <button type="submit">Valider</button>
           </form>
