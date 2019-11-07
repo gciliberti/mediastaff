@@ -19,6 +19,7 @@ class AppController extends \mf\control\AbstractController {
   }
 
   public function viewReturn(){
+
     $vue = new \app\view\AppView();
     $vue->render("return");
 
@@ -48,14 +49,16 @@ class AppController extends \mf\control\AbstractController {
 
   }
 
-  public function viewReturnSummary(){
-    $vue = new \app\view\AppView();
+  public function viewReturnSummary($iduser=null){
+    $vue = new \app\view\AppView($iduser);
     $vue->render("returnsummary");
 
   }
 
   public function checkBorrow(){
     //Doit ajouter un nouvel emprunt et rediriger vers borrowsummary
+
+
 
   }
 
@@ -67,5 +70,37 @@ class AppController extends \mf\control\AbstractController {
 
   public function checkReturn(){
     //Doit effectuer un retour en BDD et rediriger vers returnSummary
+    try{
+      $http = new \mf\utils\HttpRequest();
+      $reference = filter_var($http->post["ref"],FILTER_SANITIZE_STRING);
+      $media =  \app\model\Media::where('reference','=',$reference)->first();
+      if($media != null)
+      {
+          $return = $media->borrownotreturned()->first();
+          if($return != null)
+          {
+            $iduser = $return->id_user;
+            $return->returned = 1;
+            $return->save();
+            $this->viewReturnSummary($iduser);
+          }
+          else{
+            $vue = new \app\view\AppView();
+            $vue->render("return");
+          }
+      }
+      else{
+        $vue = new \app\view\AppView();
+        $vue->render("return");
+      }
+
+    }
+    catch(\Exception $e)
+    {
+
+      $vue = new \app\view\AppView($e);
+      $vue->render("return");
+    }
+
   }
 }
