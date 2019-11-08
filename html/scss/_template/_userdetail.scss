@@ -1,0 +1,89 @@
+body {
+
+  header {
+
+  }
+
+  main#profil_user {
+
+    .grid_container {
+      grid-template-columns: repeat(12, 1fr);
+
+
+      ul {
+        li {
+          margin: 1.5vh 0;
+          font-size: 1.2em;
+
+        }
+
+      }
+
+      .info {
+        grid-column: 12 span;
+        text-align: center;
+
+        .img_round {
+          width: 150px;
+          height: 150px;
+          overflow: hidden;
+          border-radius: 50%;
+          grid-column: 12 span;
+          margin-left: auto;
+          margin-right: auto;
+
+          img {
+            width: 100%;
+            height: auto;
+          }
+        }
+
+
+      }
+
+      .where {
+        grid-column: 12 span;
+        text-align: center;
+      }
+    }
+  }
+
+  .flex_container {
+    margin-top: 0;
+    justify-content: center;
+    align-content: space-between;
+
+    .returned {
+      margin: auto;
+      overflow: hidden scroll;
+      min-width: 15rem;
+      width: auto;
+      height: 15vh;
+      padding: 10px 20px;
+      border: 2px solid $secondarycolor;
+      border-radius: 15px;
+
+      ul {
+
+        li {
+
+
+
+          text-align: center;
+          font-size: 1.1em;
+          color: $secondarycolor;
+
+
+          &:nth-child(2n) {
+            text-align: left;
+            border-bottom: 3px solid $terciarycolor;
+            color: black;
+            padding-bottom: 2vh;
+          }
+        }
+      }
+    }
+
+
+  }
+}
