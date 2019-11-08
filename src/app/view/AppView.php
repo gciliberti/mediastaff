@@ -14,7 +14,7 @@ class AppView extends \mf\view\AbstractView
         $objRout = new \mf\router\Router();
         $hrefRetour = $objRout->urlFor('home');
         $html .= <<<EOT
-      <nav>
+      <nav class="menu">
         <a href="${hrefRetour}" class="back">
           <img src="${app_root}/html/img/back.svg" width="32" height="32" alt="fleche de retour">
         </a>
@@ -41,8 +41,9 @@ EOT;
         $html = "";
         $html .= <<< EOT
       <main id="home">
-          <nav>
+          <nav class="home">
               <div class="grid_container">
+
                   <a href="${hrefBorrowUser}">
                       <div class="item__nav">
                           <img src="${app_root}/html/img/emprunt.svg" alt="icone emprunt">
@@ -62,12 +63,13 @@ EOT;
                       </div>
                   </a>
               </div>
-              <a href="${hrefAddDoc}" class="adddoc"> <img src="${app_root}/html/img/button-plus.svg" alt="plus"> Ajouter un document</a>
-              <form id="searchDoc" method="post" action="${hrefViewDoc}" name="viewDoc">
+              <div class="grid_container">
+                <form id="searchDoc" method="post" action="${hrefViewDoc}" name="viewDoc">
                     <input required type="number" name="ref" placeholder="Reference du document">
                     <button type="submit">ok</button>
                 </form>
-
+                <a href="${hrefAddDoc}" class="adddoc"> <img src="${app_root}/html/img/button-plus.svg" alt="plus"> Ajouter un document</a>
+              </div>
           </nav>
       </main>
 EOT;
@@ -203,30 +205,29 @@ EOT;
         $users = $this->data;
         $router = new \mf\router\Router();
         $hrefViewUser = $router->urlFor('viewUser');
-
-
         $html .= <<<EOT
             <main id="users">
-                <div class="container users" style="border-bottom: 2px solid black">
+            <h1>Utilisateurs</h1>
+            <div class="container users">
+                <p>Demandes d'adhésion :</p>
 EOT;
+        if (!empty($users)) {
 
+            foreach ($users as $value) {
+                $surname = $value->surname;
+                $name = $value->name;
+                $num = $value->id;
+                $app_root = (new \mf\utils\HttpRequest())->root;
+                $picture = $value->photo;
+                if (empty($picture)) {
+                    $picture = $app_root . "/html/img/avatar.svg";
+                } else {
+                    $picture = "data:image/jpeg;base64," . base64_encode($value->photo);
+                }
 
-        foreach ($users as $value) {
-            $surname = $value->surname;
-            $name = $value->name;
-            $num = $value->id;
-
-            $app_root = (new \mf\utils\HttpRequest())->root;
-            $picture = $value->photo;
-            if (empty($picture)) {
-                $picture = $app_root . "/html/img/avatar.svg";
-            } else {
-                $picture = "data:image/jpeg;base64," . base64_encode($value->photo);
-            }
-
-            $html .= <<<EOT
-             <div class="item__user__container">
-                  <img src="${picture}" alt="photo de profil" width="50px" height="auto">
+                $html .= <<<EOT
+             <div class="item__user__container flex_container">
+                  <img src="${picture}" alt="photo de profil">
                   <p>Adherent numéro : ${num}</p>
                   <p>${name} ${surname}</p>
                   <form name="validate" method="get">
@@ -239,12 +240,22 @@ EOT;
                   </form>
               </div>
 EOT;
+            }
+
+        } else {
+            $html .= <<<EOT
+            <div class="novalidation">
+                <p>Il n'y à aucun compte à valider pour le moment !</p>
+            </div>
+EOT;
+
+
         }
         $html .= <<<EOT
           </div>
 
           <div class="flex_container">
-              <nav>
+              <nav class="user">
                   <a href="">Créer un adhérent</a>
               </nav>
               <div class="item">
@@ -355,9 +366,19 @@ EOT;
             $ville = $user->city;
             $postalcode = $user->postalcode;
             $tel = $user->phone;
+            $app_root = (new \mf\utils\HttpRequest())->root;
+            $picture = $user->photo;
+            if (empty($picture)) {
+                $picture = $app_root . "/html/img/avatar.svg";
+            } else {
+                $picture = "data:image/jpeg;base64," . base64_encode($user->photo);
+            }
             $html .= <<<EOT
             <div class="grid_container">
                <div class="info">
+                   <div class="img_round">
+                        <img src="${picture}" alt="">
+                   </div>
                   <ul>
                       <li>${name} ${surname}</li>
                       <li>${username}</li>
@@ -377,7 +398,8 @@ EOT;
             $borrowUser = \app\model\User::where('id', '=', $num)->first();
             $possessed = $borrowUser->borrownotreturned()->get();
             $returned = $borrowUser->borrowreturned()->get();
-            $possessedborrows = '';
+
+            $possessedborrows = '<ul class="container">';
             foreach ($possessed as $borrow) {
                 $title = "";
                 $date = $borrow->borrow_date_end;
@@ -390,13 +412,13 @@ EOT;
                 }
 
                 $possessedborrows .= <<< EOT
-        <ul class="container">
             <li>${title}</li>
             <li>A rendre le ${date_end}</li>
-        </ul>
 EOT;
             }
-            $returnedborrows = '';
+            $possessedborrows .= "</ul>";
+
+            $returnedborrows = '<ul class="container">';
             foreach ($returned as $borrow) {
                 $title = "";
                 $date = $borrow->borrow_date_end;
@@ -409,15 +431,14 @@ EOT;
 
 
                 $returnedborrows .= <<< EOT
-        <ul class="container">
             <li>${title}</li>
             <li>Retourné le ${date_end}</li>
-        </ul>
 EOT;
             }
+            $returnedborrows .= "</ul>";
 
             $html .= <<<EOT
-                 <div class="grid_container">
+                 <div class="flex_container">
                     <div class="returned">
                         ${returnedborrows}
                      </div>
@@ -472,7 +493,7 @@ EOT;
             $possessedborrows .= <<< EOT
           <ul class="flex_container">
               <li>${title} </li>
-              <li>à rendre le ${date}</li>
+              <li> à rendre le ${date}</li>
           </ul>
 EOT;
         }

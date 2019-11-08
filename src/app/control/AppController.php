@@ -77,10 +77,10 @@ class AppController extends \mf\control\AbstractController
       $reference = filter_var($http->get['ref'],FILTER_SANITIZE_STRING);
       $media = \app\model\Media::select('*')->where('reference', '=', $reference)->first();
     } else {
-    $post = $this->request->post;
-    $ref = filter_var($post['ref'],FILTER_SANITIZE_STRING);
-    $media = \app\model\Media::select('*')->where('reference', '=', $ref)->first();
-  }
+      $post = $this->request->post;
+      $ref = filter_var($post['ref'],FILTER_SANITIZE_STRING);
+      $media = \app\model\Media::select('*')->where('reference', '=', $ref)->first();
+    }
     if($media != null){
       $vue = new \app\view\AppView($media);
       $vue->render("viewdoc");
@@ -101,18 +101,18 @@ class AppController extends \mf\control\AbstractController
     $disponibility = filter_var($post["disponibility"],FILTER_SANITIZE_STRING);
     $keywords = filter_var($post["keywords"],FILTER_SANITIZE_STRING);
 
-      if($_FILES['fileToUpload']['tmp_name'] != ""){
-        $picture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
-        $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['picture' => $picture]);
-      }
+    if($_FILES['fileToUpload']['tmp_name'] != ""){
+      $picture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
+      $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['picture' => $picture]);
+    }
 
-     $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['title' => $title,
-     'genre' => $genre, 'type' => $type, 'description' => $description,
-     'keywords' => $keywords, 'disponibility' => $disponibility]);
+    $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['title' => $title,
+    'genre' => $genre, 'type' => $type, 'description' => $description,
+    'keywords' => $keywords, 'disponibility' => $disponibility]);
 
-     $mediaB = \app\model\Media::select('*')->where('reference', '=', $http->get['ref'])->first();
-     $vue = new \app\view\AppView($mediaB);
-     $vue->render("viewdoc");
+    $mediaB = \app\model\Media::select('*')->where('reference', '=', $http->get['ref'])->first();
+    $vue = new \app\view\AppView($mediaB);
+    $vue->render("viewdoc");
   }
 
   public function suppDoc(){
@@ -139,60 +139,59 @@ class AppController extends \mf\control\AbstractController
 
   public function viewUserModify()
   {
-
     if (!empty($_GET['accept'])) {
-      $user = \app\model\User::where('id', '=', $_GET['accept'])->first();
+
+      $user = \app\model\User::where('id', '=', filter_var($_GET['accept'], FILTER_SANITIZE_NUMBER_INT))->first();
       $user->isvalidated = 1;
       $user->save();
       unset ($_GET['accept']);
       \mf\router\Router::executeRoute('users');
     } elseif (!empty($_GET['delete'])) {
-      $user = \app\model\User::where('id', '=', $_GET['delete'])->first();
+      $user = \app\model\User::where('id', '=' , filter_var($_GET['accept'], FILTER_SANITIZE_NUMBER_INT))->first();
       $user->delete();
-
-
       unset ($_GET['delete']);
       \mf\router\Router::executeRoute('users');
-    }
   }
+}
 
 
-  public function viewReturnSummary($iduser=null){
-    $vue = new \app\view\AppView($iduser);
-    $vue->render("returnsummary");
-  }
-  public function checkBorrow()
+public function viewReturnSummary($iduser=null){
+  $vue = new \app\view\AppView($iduser);
+  $vue->render("returnsummary");
+}
+public function checkBorrow()
+{
+  $http = new \mf\utils\HttpRequest();
+  $vue = new \app\view\AppView();
+  $numAdherent = $_SESSION['idBorrower'];
+  $countUser = \app\model\User::where('id', '=', $numAdherent)->count();
+
+  if ($countUser != 1) {//L'utilisateur n'existe pas
+  $vueErreur = new \app\view\AppView("<script>alert(\"L'utilisateur n'existe pas!\")</script>");
+  $vueErreur->render("borrowUser");
+  return;
+}
+foreach ($_SESSION['listeEmprunt'] as $emprunt) {
+  $countMediaDispo = \app\model\Media::where('reference', '=', $emprunt)->where('disponibility','=',1)->count();
+  if($countMediaDispo!=1){//si le media est déjà emprunté ou indisponible
+
+  }else
   {
-    $http = new \mf\utils\HttpRequest();
-    $vue = new \app\view\AppView();
-    $numAdherent = $_SESSION['idBorrower'];
-    $countUser = \app\model\User::where('id', '=', $numAdherent)->count();
-
-    if ($countUser != 1) {//L'utilisateur n'existe pas
-    $vueErreur = new \app\view\AppView("<script>alert(\"L'utilisateur n'existe pas!\")</script>");
-    $vueErreur->render("borrowUser");
-    return;
+    $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
+    $mediaId->disponibility = 2;//Le media est emprunté
+    $borrow = new \app\model\Borrow();
+    $dateDuJour = date("Y/m/d");
+    $dateRendu = date('Y-m-d', strtotime($dateDuJour . ' + 14 days'));
+    $borrow->borrow_date_end = $dateRendu;
+    $borrow->returned = 0;
+    $borrow->id_user = $numAdherent;
+    $borrow->id_media = $mediaId->id;
+    $borrow->borrow_date_start = date('Y-m-d H:i:s');
+    $borrow->save();
+    $mediaId->save();
   }
-  foreach ($_SESSION['listeEmprunt'] as $emprunt) {
-    $countMediaDispo = \app\model\Media::where('reference', '=', $emprunt)->where('disponibility','=',1)->count();
-    if($countMediaDispo!=1){//si le media est déjà emprunté ou indisponible
-
-    }else
-    {
-      $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
-      $mediaId->disponibility = 2;//Le media est emprunté
-      $borrow = new \app\model\Borrow();
-      $dateDuJour = date("Y/m/d");
-      $dateRendu = date('Y-m-d', strtotime($dateDuJour . ' + 14 days'));
-      $borrow->borrow_date_end = $dateRendu;
-      $borrow->returned = 0;
-      $borrow->id_user = $numAdherent;
-      $borrow->id_media = $mediaId->id;
-      $borrow->save();
-      $mediaId->save();
-    }
-  }
-  $this->viewBorrowSummary();
+}
+$this->viewBorrowSummary();
 }
 
 public function viewUserInfo()

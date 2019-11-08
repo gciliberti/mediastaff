@@ -2,12 +2,13 @@
 
 namespace mf\view;
 
-abstract class AbstractView {
+abstract class AbstractView
+{
 
     static protected $style_sheets = []; /* un tableau de fichiers style */
-    static protected $app_title    = "MF app Title"; /* un titre de document */
+    static protected $app_title = "MF app Title"; /* un titre de document */
 
-    protected $data        = null; /* les données nécessaires */
+    protected $data = null; /* les données nécessaires */
 
     /* Constructeur
      *
@@ -22,7 +23,8 @@ abstract class AbstractView {
      *
      */
 
-    public function __construct( $data=null ){
+    public function __construct($data = null)
+    {
         $this->data = $data;
     }
 
@@ -38,7 +40,8 @@ abstract class AbstractView {
      *
      */
 
-    static public function addStyleSheet($path_to_css_files){
+    static public function addStyleSheet($path_to_css_files)
+    {
         self::$style_sheets[] = $path_to_css_files;
     }
 
@@ -53,7 +56,8 @@ abstract class AbstractView {
      *
      */
 
-    static public function setAppTitle($title){
+    static public function setAppTitle($title)
+    {
         self::$app_title = $title;
     }
 
@@ -97,15 +101,16 @@ abstract class AbstractView {
      *
      */
 
-    public function render($selector){
+    public function render($selector)
+    {
         /* le titre du document */
         $title = self::$app_title;
 
         /* les feuilles de style */
         $app_root = (new \mf\utils\HttpRequest())->root;
         $styles = '';
-        foreach ( self::$style_sheets as $file )
-            $styles .= '<link rel="stylesheet" href="'.$app_root.'/'.$file.'"> ';
+        foreach (self::$style_sheets as $file)
+            $styles .= '<link rel="stylesheet" href="' . $app_root . '/' . $file . '"> ';
 
 
         /* on appele la methode renderBody de la sous classe */
@@ -128,7 +133,7 @@ abstract class AbstractView {
 	    ${styles}
     </head>
 
-    <body class="col-10 offset-1">
+    <body>
 
        ${body}
 
