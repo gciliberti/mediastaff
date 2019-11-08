@@ -80,16 +80,16 @@ EOT;
         $router = new \mf\router\Router();
         $hrefCheckReturn = $router->urlFor('checkReturn');
         $app_root = (new \mf\utils\HttpRequest())->root;
-        $listeReference="";
-        $erreur="";
-        if(isset($this->data)){
-          $erreur=$this->data;
+        $listeReference = "";
+        $erreur = "";
+        if (isset($this->data)) {
+            $erreur = $this->data;
         }
-        if(!empty($_SESSION['listeReference'])){
-          $listeReference="<h4>Reference déjà ajoutée:</h4>";
-          foreach ($_SESSION['listeReference'] as $reference) {
-            $listeReference.="<li>".$reference."</li>";
-          }
+        if (!empty($_SESSION['listeReference'])) {
+            $listeReference = "<h4>Reference déjà ajoutée:</h4>";
+            foreach ($_SESSION['listeReference'] as $reference) {
+                $listeReference .= "<li>" . $reference . "</li>";
+            }
         }
         $html = "";
         $html .= <<<EOT
@@ -108,18 +108,20 @@ EOT;
         return $html;
     }
 
-    public function renderBorrowUser(){
-      $router = new \mf\router\Router();
-      $hrefCheckBorrow = $router->urlFor('borrow');
-      $app_root = (new \mf\utils\HttpRequest())->root;
-      $erreur="";
-      if(isset($this->data)){
-        $erreur=$this->data;
-      }
+    public function renderBorrowUser()
+    {
+        $router = new \mf\router\Router();
+        $hrefCheckBorrow = $router->urlFor('borrow');
+        $app_root = (new \mf\utils\HttpRequest())->root;
+        $erreur = "";
+        if (isset($this->data)) {
+            $erreur = $this->data;
+        }
         $html = "";
         $html .= <<<EOT
         ${erreur}
       <main id="borrow">
+      <h1>Emprunt</h1>
           <form method="POST" action="${hrefCheckBorrow}" name="userBorrow">
               <div class="container userBorrow">
                 <div class="item userBorrow">
@@ -154,7 +156,7 @@ EOT;
               <div class="container borrow">
                   <div class="item borrow">
                       <input name="mediaRef" type="text" placeholder="Référence du document">
-                      <input name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+                      <input name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout" class="add"/>
                       <ul>
                         ${listeEmprunt}
                       </ul>
@@ -270,35 +272,36 @@ EOT;
         return $html;
     }
 
-    private function renderViewDoc(){
-      $router = new \mf\router\Router();
-      $http = new \mf\utils\HttpRequest();
-      $media = $this->data;
-      $title = $media['title'];
-      $reference = $media['reference'];
-      $hrefViewDoc = $router->urlFor('viewDoc', ['action' => 'modify', 'ref' => $reference]);
-      $hrefModifyDoc = $router->urlFor('modifyDoc', ['ref' => $reference]);
-      $hrefSuppDoc = $router->urlFor('suppDoc', ['ref' => $reference]);
-      $description = $media['description'];
-      $genre = $media['genre'];
-      $type = $media['type'];
-      $keywords = $media['keywords'];
-      $disponibility = $media['disponibility'];
-      switch ($disponibility) {
-          case '0':
-            $disponibility = 'indisponible';
-            break;
-          case '1':
-            $disponibility = 'disponible';
-            break;
-          case '2':
-            $disponibility = 'emprunté';
-            break;
-          }
-      $picture = "data:image/jpeg;base64,".base64_encode($media->picture);
+    private function renderViewDoc()
+    {
+        $router = new \mf\router\Router();
+        $http = new \mf\utils\HttpRequest();
+        $media = $this->data;
+        $title = $media['title'];
+        $reference = $media['reference'];
+        $hrefViewDoc = $router->urlFor('viewDoc', ['action' => 'modify', 'ref' => $reference]);
+        $hrefModifyDoc = $router->urlFor('modifyDoc', ['ref' => $reference]);
+        $hrefSuppDoc = $router->urlFor('suppDoc', ['ref' => $reference]);
+        $description = $media['description'];
+        $genre = $media['genre'];
+        $type = $media['type'];
+        $keywords = $media['keywords'];
+        $disponibility = $media['disponibility'];
+        switch ($disponibility) {
+            case '0':
+                $disponibility = 'indisponible';
+                break;
+            case '1':
+                $disponibility = 'disponible';
+                break;
+            case '2':
+                $disponibility = 'emprunté';
+                break;
+        }
+        $picture = "data:image/jpeg;base64," . base64_encode($media->picture);
 
-      if (isset($http->get['action']) && $http->get['action'] === 'modify') {
-        $html = <<<EOT
+        if (isset($http->get['action']) && $http->get['action'] === 'modify') {
+            $html = <<<EOT
         <main id="search_doc">
           <div class="item_doc">
             <form class="conntect" method="post" action="${hrefModifyDoc}" enctype="multipart/form-data">
@@ -326,8 +329,8 @@ EOT;
         </main>
 EOT;
 
-      } else {
-      $html = <<<EOT
+        } else {
+            $html = <<<EOT
       <main id="search_doc">
         <div class="item_doc">
             <img src="${picture}" width="64" height="64" alt="image du dcoument">
@@ -344,14 +347,15 @@ EOT;
         </div>
       </main>
 EOT;
-}
-    return $html;
+        }
+        return $html;
     }
 
 
-    private function renderUserInfo(){
-      $html = "";
-      $html .= <<<EOT
+    private function renderUserInfo()
+    {
+        $html = "";
+        $html .= <<<EOT
       <main id="profil_user">
 EOT;
         $user = $this->data;
@@ -479,16 +483,14 @@ EOT;
         $name = $user->name;
         $surname = $user->surname;
         $possessedborrows = '';
-        foreach($possessed as $borrow)
-        {
-          $title="";
-          setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
-          $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
-          $borrow = $borrow->media()->get();
-          foreach($borrow as $media)
-          {
-            $title = $media->title;
-          }
+        foreach ($possessed as $borrow) {
+            $title = "";
+            setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+            $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
+            $borrow = $borrow->media()->get();
+            foreach ($borrow as $media) {
+                $title = $media->title;
+            }
 
 
             $possessedborrows .= <<< EOT
@@ -502,6 +504,7 @@ EOT;
         $html = "";
         $html .= <<<EOT
       <main id="recap_borrow">
+      <h1>Récapitulatif emprunt</h1>
           <div>
               <h3>Adhérent n° ${iduser}, ${name} ${surname} </h3>
                 ${possessedborrows}
@@ -535,27 +538,26 @@ EOT;
             }
 
 
-        $possessedborrows .= <<< EOT
+            $possessedborrows .= <<< EOT
         <ul>
             <li>${title}</li>
             <li>A rendre le ${date}</li>
         </ul>
 EOT;
-      }
-      $returnedborrows='';
-      foreach ($returned as $borrow) {
-        $title="";
-        $date = $borrow->borrow_date_end;
-        setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
-        $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
-        $borrow = $borrow->media()->get();
-        foreach($borrow as $media)
-        {
-          $title = $media->title;
         }
+        $returnedborrows = '';
+        foreach ($returned as $borrow) {
+            $title = "";
+            $date = $borrow->borrow_date_end;
+            setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+            $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
+            $borrow = $borrow->media()->get();
+            foreach ($borrow as $media) {
+                $title = $media->title;
+            }
 
 
-        $returnedborrows .= <<< EOT
+            $returnedborrows .= <<< EOT
         <ul>
             <li>${title}</li>
             <li>Retourné le ${date} </li>
@@ -613,14 +615,14 @@ EOT;
                 break;
 
             case 'viewdoc' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderViewDoc();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderViewDoc();
+                break;
 
             case 'modifydoc' :
-              $navBar = $this->renderHeader();
-              $content = $this->renderViewDoc();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderViewDoc();
+                break;
 
             case 'userregister' :
                 $navBar = $this->renderHeader();
