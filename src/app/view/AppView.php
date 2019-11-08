@@ -290,47 +290,53 @@ EOT;
       if (isset($http->get['action']) && $http->get['action'] === 'modify') {
         $html = <<<EOT
         <main id="search_doc">
+        <form class="conntect" method="post" action="${hrefModifyDoc}" enctype="multipart/form-data">
           <div class="item_doc">
-            <form class="conntect" method="post" action="${hrefModifyDoc}" enctype="multipart/form-data">
             <div id="image">
              <div>
                 <img src="${picture}" width="64" height="64" alt="photo de l'utilisateur">
               </div>
-              <label for="file" class="label-file">parcourir...</label>
+              <label for="file" class="label-file">ajouter</label>
               <input id="file" type="file" name="fileToUpload" accept="image/png, image/gif, image/jpeg" id="fileToUpload">
             </div>
               <input required id="title" name="title" value="${title}">
-              <p>${reference}</p>
+              <p id="reference">${reference}</p>
               <input required id="type" name="type" value="${type}">
               <input required id="genre" name="genre" value="${genre}">
               <textarea required id="description" name="description" value="${description}">${description}</textarea>
-              <input required id="keywords" name="keywords" value="${keywords}">
-              <select required name="disponibility" id="disponibility">
-                <option value="0">indisponible</option>
-                <option value="1">disponible</option>
-                <option value="2">emprunté</option>
-              </select>
-            </div>
+              <div id="complement">
+                <input required id="keywords" name="keywords" value="${keywords}">
+                <select required name="disponibility" id="disponibility">
+                  <option value="0">indisponible</option>
+                  <option value="1">disponible</option>
+                  <option value="2">emprunté</option>
+                </select>
+              </div>
             <input class="button-empty" type="submit" value="valider">
           </form>
+          </div>
         </main>
 EOT;
 
       } else {
       $html = <<<EOT
       <main id="search_doc">
+      <div class="conntect">
         <div class="item_doc">
-            <img src="${picture}" width="64" height="64" alt="image du dcoument">
-            <h3>${title}</h3>
-            <p>${reference}</p>
-            <p>${type}/${genre}</p>
-            <p>${description}</p>
-            <p>${keywords}</p>
-            <p>${disponibility}</p>
+            <img id="image" src="${picture}" width="64" height="64" alt="image du dcoument">
+            <h3 id="title">${title}</h3>
+            <p id="reference">${reference}</p>
+            <p id="type">${type}/${genre}</p>
+            <p id="description">${description}</p>
+            <div id="complement">
+              <p id="keywords">${keywords}</p>
+              <p id="disponibility">${disponibility}</p>
+            </div>
         </div>
         <div class="buttons">
           <a href="${hrefViewDoc}"><img src=""><input class="button-empty" type="button" value="Modifier"></a>
           <a href="${hrefSuppDoc}"><img src=""><input class="button-empty" type="button" value="Supprimer"></a>
+        </div>
         </div>
       </main>
 EOT;
