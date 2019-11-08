@@ -179,19 +179,16 @@ EOT;
         $users = $this->data;
         $router = new \mf\router\Router();
         $hrefViewUser = $router->urlFor('viewUser');
-
-
         $html .= <<<EOT
             <main id="users">
                 <div class="container users" style="border-bottom: 2px solid black">
 EOT;
-
-
         foreach ($users as $value) {
+//            var_dump($users);
             $surname = $value->surname;
             $name = $value->name;
             $num = $value->id;
-
+            var_dump($num);
             $app_root = (new \mf\utils\HttpRequest())->root;
             $picture = $value->photo;
             if (empty($picture)) {
@@ -200,6 +197,8 @@ EOT;
                 $picture = "data:image/jpeg;base64," . base64_encode($value->photo);
             }
 
+        }
+        if (!empty($num)) {
             $html .= <<<EOT
              <div class="item__user__container">
                   <img src="${picture}" alt="photo de profil" width="50px" height="auto">
@@ -215,6 +214,14 @@ EOT;
                   </form>
               </div>
 EOT;
+        } else {
+            $html .= <<<EOT
+            <div class="novalidation">
+                <p>Il n'y à aucun compte à valider pour le moment !</p>
+            </div>
+EOT;
+
+
         }
         $html .= <<<EOT
           </div>
@@ -314,7 +321,7 @@ EOT;
         </ul>
 EOT;
             }
-            
+
             $html .= <<<EOT
                  <div class="grid_container">
                     <div class="returned">
