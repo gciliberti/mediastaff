@@ -28,6 +28,7 @@ EOT;
 
     }
 
+
     public function renderHome()
     {
 
@@ -37,8 +38,7 @@ EOT;
         $hrefAddDoc = $route->urlFor('addDoc');
         $hrefReturn = $route->urlFor('return');
         $hrefUsers = $route->urlFor('users');
-
-
+        $hrefViewDoc = $route->urlFor('viewDoc');
         $html = "";
         $html .= <<< EOT
       <main id="home">
@@ -46,24 +46,29 @@ EOT;
               <div class="grid_container">
                   <a href="${hrefBorrowUser}">
                       <div class="item__nav">
-                          <img src="${app_root}/html/img/books-stack.svg" alt="icone emprunt">
+                          <img src="${app_root}/html/img/emprunt.svg" alt="icone emprunt">
                           <h2>Emprunt</h2>
                       </div>
                   </a>
                   <a href="${hrefReturn}">
                       <div class="item__nav">
-                          <img src="${app_root}/html/img/back.svg" alt="icone retour">
+                          <img src="${app_root}/html/img/retour.svg" alt="icone retour">
                           <h2>Retour</h2>
                       </div>
                   </a>
                   <a href="${hrefUsers}">
                       <div class="item__nav">
-                          <img src="${app_root}/html/img/avatar.svg" alt="icone utilisateurs">
+                          <img src="${app_root}/html/img/avatarHome.svg" alt="icone utilisateurs">
                           <h2>Utilisateurs</h2>
                       </div>
                   </a>
               </div>
               <a href="${hrefAddDoc}" class="adddoc"> <img src="${app_root}/html/img/button-plus.svg" alt="plus"> Ajouter un document</a>
+              <form id="searchDoc" method="post" action="${hrefViewDoc}" name="viewDoc">
+                    <input required type="number" name="ref" placeholder="Reference du document">
+                    <button type="submit">ok</button>
+                </form>
+
           </nav>
       </main>
 EOT;
@@ -74,26 +79,46 @@ EOT;
     {
         $router = new \mf\router\Router();
         $hrefCheckReturn = $router->urlFor('checkReturn');
+        $app_root = (new \mf\utils\HttpRequest())->root;
+        $listeReference="";
+        $erreur="";
+        if(isset($this->data)){
+          $erreur=$this->data;
+        }
+        if(!empty($_SESSION['listeReference'])){
+          $listeReference="<h4>Reference déjà ajoutée:</h4>";
+          foreach ($_SESSION['listeReference'] as $reference) {
+            $listeReference.="<li>".$reference."</li>";
+          }
+        }
         $html = "";
         $html .= <<<EOT
+        ${erreur}
       <main id="return">
           <form action="${hrefCheckReturn}" method="post" name="return">
               <input type="text" name="ref" placeholder="Référence">
-              <button type="submit">Valider</button>
+              <input required name="ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+              <ul>
+                ${listeReference}
+              </ul>
+              <button name="valider" type="submit">Valider</button>
           </form>
       </main>
 EOT;
         return $html;
     }
 
-    public function renderBorrowUser()
-    {
-        $router = new \mf\router\Router();
-        $hrefCheckBorrow = $router->urlFor('borrow');
-        $app_root = (new \mf\utils\HttpRequest())->root;
-
+    public function renderBorrowUser(){
+      $router = new \mf\router\Router();
+      $hrefCheckBorrow = $router->urlFor('borrow');
+      $app_root = (new \mf\utils\HttpRequest())->root;
+      $erreur="";
+      if(isset($this->data)){
+        $erreur=$this->data;
+      }
         $html = "";
         $html .= <<<EOT
+        ${erreur}
       <main id="borrow">
           <form method="POST" action="${hrefCheckBorrow}" name="userBorrow">
               <div class="container userBorrow">
@@ -128,8 +153,8 @@ EOT;
           <form method="POST" action="${hrefBorrow}" name="borrow">
               <div class="container borrow">
                   <div class="item borrow">
-                      <input required name="mediaRef" type="text" placeholder="Référence du document">
-                      <input required name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+                      <input name="mediaRef" type="text" placeholder="Référence du document">
+                      <input name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
                       <ul>
                         ${listeEmprunt}
                       </ul>
@@ -155,13 +180,13 @@ EOT;
           <form method="post" action="${hrefCheckDoc}" name="addDoc" enctype="multipart/form-data">
               <div class="container addDoc">
                 <input required id="title" name="title" value="" placeholder="titre">
-                <input required id="ref" name="ref" value="" placeholder="référence">
+                <input type="number" required id="ref" name="ref" value="" placeholder="référence">
                 <input required id="type" name="type" value="" placeholder="type">
                 <input required id="genre" name="genre" value="" placeholder="genre">
                 <input required id="keywords" name="keywords" value="" placeholder="mots clefs">
                 <div class="picture">
                   <label for="file" class="label-file">ajouter une image</label>
-                  <input required id="file" type="file" name="fileToUpload">
+                  <input required accept="image/png, image/gif, image/jpeg" id="file" type="file" name="fileToUpload">
                 </div>
                 <textarea required id="description" name="description" value="" placeholder="déscription"></textarea>
                 <button type="submit">Valider</button>
@@ -245,11 +270,88 @@ EOT;
         return $html;
     }
 
-    private function renderUserInfo()
-    {
+    private function renderViewDoc(){
+      $router = new \mf\router\Router();
+      $http = new \mf\utils\HttpRequest();
+      $media = $this->data;
+      $title = $media['title'];
+      $reference = $media['reference'];
+      $hrefViewDoc = $router->urlFor('viewDoc', ['action' => 'modify', 'ref' => $reference]);
+      $hrefModifyDoc = $router->urlFor('modifyDoc', ['ref' => $reference]);
+      $hrefSuppDoc = $router->urlFor('suppDoc', ['ref' => $reference]);
+      $description = $media['description'];
+      $genre = $media['genre'];
+      $type = $media['type'];
+      $keywords = $media['keywords'];
+      $disponibility = $media['disponibility'];
+      switch ($disponibility) {
+          case '0':
+            $disponibility = 'indisponible';
+            break;
+          case '1':
+            $disponibility = 'disponible';
+            break;
+          case '2':
+            $disponibility = 'emprunté';
+            break;
+          }
+      $picture = "data:image/jpeg;base64,".base64_encode($media->picture);
 
-        $html = "";
-        $html .= <<<EOT
+      if (isset($http->get['action']) && $http->get['action'] === 'modify') {
+        $html = <<<EOT
+        <main id="search_doc">
+          <div class="item_doc">
+            <form class="conntect" method="post" action="${hrefModifyDoc}" enctype="multipart/form-data">
+            <div id="image">
+             <div>
+                <img src="${picture}" width="64" height="64" alt="photo de l'utilisateur">
+              </div>
+              <label for="file" class="label-file">parcourir...</label>
+              <input id="file" type="file" name="fileToUpload" accept="image/png, image/gif, image/jpeg" id="fileToUpload">
+            </div>
+              <input required id="title" name="title" value="${title}">
+              <p>${reference}</p>
+              <input required id="type" name="type" value="${type}">
+              <input required id="genre" name="genre" value="${genre}">
+              <textarea required id="description" name="description" value="${description}">${description}</textarea>
+              <input required id="keywords" name="keywords" value="${keywords}">
+              <select required name="disponibility" id="disponibility">
+                <option value="0">indisponible</option>
+                <option value="1">disponible</option>
+                <option value="2">emprunté</option>
+              </select>
+            </div>
+            <input class="button-empty" type="submit" value="valider">
+          </form>
+        </main>
+EOT;
+
+      } else {
+      $html = <<<EOT
+      <main id="search_doc">
+        <div class="item_doc">
+            <img src="${picture}" width="64" height="64" alt="image du dcoument">
+            <h3>${title}</h3>
+            <p>${reference}</p>
+            <p>${type}/${genre}</p>
+            <p>${description}</p>
+            <p>${keywords}</p>
+            <p>${disponibility}</p>
+        </div>
+        <div class="buttons">
+          <a href="${hrefViewDoc}"><img src=""><input class="button-empty" type="button" value="Modifier"></a>
+          <a href="${hrefSuppDoc}"><img src=""><input class="button-empty" type="button" value="Supprimer"></a>
+        </div>
+      </main>
+EOT;
+}
+    return $html;
+    }
+
+
+    private function renderUserInfo(){
+      $html = "";
+      $html .= <<<EOT
       <main id="profil_user">
 EOT;
         $user = $this->data;
@@ -271,7 +373,7 @@ EOT;
                 $picture = "data:image/jpeg;base64," . base64_encode($user->photo);
             }
             $html .= <<<EOT
-            <div class="grid_container">         
+            <div class="grid_container">
                <div class="info">
                    <div class="img_round">
                         <img src="${picture}" alt="">
@@ -330,9 +432,11 @@ EOT;
                 $returnedborrows .= <<< EOT
             <li>${title}</li>
             <li>Retourné le ${date_end}</li>
+        </ul>
 EOT;
             }
             $returnedborrows .= "</ul>";
+
 
             $html .= <<<EOT
                  <div class="flex_container">
@@ -357,7 +461,7 @@ EOT;
 
 
         $html .= <<<EOT
-           
+
       </main>
 EOT;
         return $html;
@@ -375,19 +479,22 @@ EOT;
         $name = $user->name;
         $surname = $user->surname;
         $possessedborrows = '';
-        foreach ($possessed as $borrow) {
-            $title = "";
-            $date = $borrow->borrow_date_end;
-            $borrow = $borrow->media()->get();
-            foreach ($borrow as $media) {
-                $title = $media->title;
-            }
+        foreach($possessed as $borrow)
+        {
+          $title="";
+          setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+          $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
+          $borrow = $borrow->media()->get();
+          foreach($borrow as $media)
+          {
+            $title = $media->title;
+          }
 
 
             $possessedborrows .= <<< EOT
           <ul class="flex_container">
-              <li>${title}</li>
-              <li>A rendre le ${date}</li>
+              <li>${title} </li>
+              <li>à rendre le ${date}</li>
           </ul>
 EOT;
         }
@@ -428,35 +535,39 @@ EOT;
             }
 
 
-            $possessedborrows .= <<< EOT
-        <ul class="flex_container">
+        $possessedborrows .= <<< EOT
+        <ul>
             <li>${title}</li>
             <li>A rendre le ${date}</li>
         </ul>
 EOT;
+      }
+      $returnedborrows='';
+      foreach ($returned as $borrow) {
+        $title="";
+        $date = $borrow->borrow_date_end;
+        setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+        $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
+        $borrow = $borrow->media()->get();
+        foreach($borrow as $media)
+        {
+          $title = $media->title;
         }
-        $returnedborrows = '';
-        foreach ($returned as $borrow) {
-            $title = "";
-            $date = $borrow->borrow_date_end;
-            $borrow = $borrow->media()->get();
-            foreach ($borrow as $media) {
-                $title = $media->title;
-            }
 
 
-            $returnedborrows .= <<< EOT
-        <ul class="flex_container">
+        $returnedborrows .= <<< EOT
+        <ul>
             <li>${title}</li>
-            <li>Retourné le ${date}</li>
+            <li>Retourné le ${date} </li>
         </ul>
 EOT;
         }
         $html = "";
         $html .= <<<EOT
       <main id="recap_return">
+          <h1>Récapitulatif de retour</h1>
           <h2>Adhérent n° ${iduser}, ${name} ${surname} </h2>
-          <div class="flex_container">
+          <div class="grid_container">
               <div class="item__return">
                   <h3>Documents retournés</h3>
                   ${returnedborrows}
@@ -472,7 +583,6 @@ EOT;
       </main>
 EOT;
         return $html;
-
     }
 
 
@@ -501,6 +611,16 @@ EOT;
                 $navBar = $this->renderHeader();
                 $content = $this->renderAddDoc();
                 break;
+
+            case 'viewdoc' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderViewDoc();
+              break;
+
+            case 'modifydoc' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderViewDoc();
+              break;
 
             case 'userregister' :
                 $navBar = $this->renderHeader();
