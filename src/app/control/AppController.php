@@ -62,12 +62,14 @@ class AppController extends \mf\control\AbstractController
     {
 
         if (!empty($_GET['accept']) || !empty($_GET['delete'])) {
-
             \mf\router\Router::executeRoute('userModify');
         } else {
             $users = \app\model\User::where('isvalidated', '=', 0)->get();
             $vue = new \app\view\AppView($users);
             $vue->render("userregister");
+
+
+
         }
 
     }

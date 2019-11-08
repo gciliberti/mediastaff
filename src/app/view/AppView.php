@@ -39,8 +39,6 @@ EOT;
         $hrefUsers = $route->urlFor('users');
 
 
-
-
         $html = "";
         $html .= <<< EOT
       <main id="home">
@@ -281,12 +279,8 @@ EOT;
            </div>
 EOT;
         }
-
-
-        $html .= <<<EOT
-
         
-
+        $html .= <<<EOT
 
       </main>
 EOT;
