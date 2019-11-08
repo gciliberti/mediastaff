@@ -41,8 +41,10 @@ EOT;
         $html = "";
         $html .= <<< EOT
       <main id="home">
+
           <nav>
               <div class="grid_container">
+                  
                   <a href="${hrefBorrowUser}">
                       <div class="item__nav">
                           <img src="${app_root}/html/img/emprunt.svg" alt="icone emprunt">
