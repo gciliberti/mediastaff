@@ -71,12 +71,24 @@ EOT;
     {
         $router = new \mf\router\Router();
         $hrefCheckReturn = $router->urlFor('checkReturn');
+        $app_root = (new \mf\utils\HttpRequest())->root;
+        $listeReference="";
+        if(!empty($_SESSION['listeReference'])){
+          $listeReference="<h4>Reference déjà ajoutée:</h4>";
+          foreach ($_SESSION['listeReference'] as $reference) {
+            $listeReference.="<li>".$reference."</li>";
+          }
+        }
         $html = "";
         $html .= <<<EOT
       <main id="return">
           <form action="${hrefCheckReturn}" method="post" name="return">
               <input type="text" name="ref" placeholder="Référence">
-              <button type="submit">Valider</button>
+              <input required name="ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+              <ul>
+                ${listeReference}
+              </ul>
+              <button name="valider" type="submit">Valider</button>
           </form>
       </main>
 EOT;
@@ -84,6 +96,7 @@ EOT;
     }
 
     public function renderBorrowUser(){
+      var_dump($this);
       $router = new \mf\router\Router();
       $hrefCheckBorrow = $router->urlFor('borrow');
       $app_root = (new \mf\utils\HttpRequest())->root;
@@ -123,8 +136,8 @@ EOT;
           <form method="POST" action="${hrefBorrow}" name="borrow">
               <div class="container borrow">
                   <div class="item borrow">
-                      <input required name="mediaRef" type="text" placeholder="Référence du document">
-                      <input required name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+                      <input name="mediaRef" type="text" placeholder="Référence du document">
+                      <input name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
                       <ul>
                         ${listeEmprunt}
                       </ul>
@@ -307,7 +320,8 @@ EOT;
         foreach($possessed as $borrow)
         {
           $title="";
-          $date = $borrow->borrow_date_end;
+          setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+          $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
           $borrow = $borrow->media()->get();
           foreach($borrow as $media)
           {
@@ -317,8 +331,8 @@ EOT;
 
           $possessedborrows .= <<< EOT
           <ul class="flex_container">
-              <li>${title}</li>
-              <li>A rendre le ${date}</li>
+              <li>${title} </li>
+              <li>à rendre le ${date}</li>
           </ul>
 EOT;
         }
@@ -370,6 +384,8 @@ EOT;
       foreach ($returned as $borrow) {
         $title="";
         $date = $borrow->borrow_date_end;
+        setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+        $date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
         $borrow = $borrow->media()->get();
         foreach($borrow as $media)
         {
@@ -380,7 +396,7 @@ EOT;
         $returnedborrows .= <<< EOT
         <ul class="flex_container">
             <li>${title}</li>
-            <li>Retourné le ${date}</li>
+            <li>Retourné le ${date} </li>
         </ul>
 EOT;
       }
