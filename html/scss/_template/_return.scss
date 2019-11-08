@@ -1,0 +1,35 @@
+body{
+
+  header{
+
+  }
+
+  #return{
+    h2{
+      text-align: center;
+    }
+    form{
+
+      display: block;
+      margin: auto;
+      width: 80%;
+      text-align: center;
+      margin-top:20%;
+
+      input{
+        width : 25%;
+        padding : 0;
+      }
+      button{
+        display: block;
+        margin: auto;
+        text-align: center;
+        box-sizing: border-box;
+        width : 25%;
+        padding : 0;
+      }
+    }
+
+  }
+
+}
