@@ -255,21 +255,77 @@ EOT;
             $postalcode = $user->postalcode;
             $tel = $user->phone;
             $html .= <<<EOT
-           <div class="info">
-              <ul>
-                  <li>${name} ${surname}</li>
-                  <li>${username}</li>
-                  <li>${mail}</li>
-              </ul>
-          </div>
-          <div class="where">
-              <ul>
-                  <li>${adresse}</li>
-                  <li>${postalcode} ${ville}</li>
-                  <li>${tel}</li>
-              </ul>
-          </div>
+            <div class="grid_container">         
+               <div class="info">
+                  <ul>
+                      <li>${name} ${surname}</li>
+                      <li>${username}</li>
+                      <li>${mail}</li>
+                  </ul>
+              </div>
+              <div class="where">
+                  <ul>
+                      <li>${adresse}</li>
+                      <li>${postalcode} ${ville}</li>
+                      <li>${tel}</li>
+                  </ul>
+              </div>
+            </div>
 EOT;
+
+            $borrowUser = \app\model\User::where('id', '=', $num)->first();
+            $possessed = $borrowUser->borrownotreturned()->get();
+            $returned = $borrowUser->borrowreturned()->get();
+            $possessedborrows = '';
+            foreach ($possessed as $borrow) {
+                $title = "";
+                $date = $borrow->borrow_date_end;
+                setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+                $date_end = strftime('%d %B %G', strtotime($date));
+
+                $borrow = $borrow->media()->get();
+                foreach ($borrow as $media) {
+                    $title = $media->title;
+                }
+
+                $possessedborrows .= <<< EOT
+        <ul class="container">
+            <li>${title}</li>
+            <li>A rendre le ${date_end}</li>
+        </ul>
+EOT;
+            }
+            $returnedborrows = '';
+            foreach ($returned as $borrow) {
+                $title = "";
+                $date = $borrow->borrow_date_end;
+                setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
+                $date_end = strftime('%d %B %G', strtotime($date));
+                $borrow = $borrow->media()->get();
+                foreach ($borrow as $media) {
+                    $title = $media->title;
+                }
+
+
+                $returnedborrows .= <<< EOT
+        <ul class="container">
+            <li>${title}</li>
+            <li>Retourné le ${date_end}</li>
+        </ul>
+EOT;
+            }
+            
+            $html .= <<<EOT
+                 <div class="grid_container">
+                    <div class="returned">
+                        ${returnedborrows}
+                     </div>
+                     <div class="returned">
+                        ${possessedborrows}
+                    </div>
+                 </div>
+EOT;
+
 
         } else {
             $html .= <<<EOT
@@ -280,8 +336,9 @@ EOT;
 EOT;
         }
 
-        $html .= <<<EOT
 
+        $html .= <<<EOT
+           
       </main>
 EOT;
         return $html;
@@ -293,30 +350,29 @@ EOT;
         $router = new \mf\router\Router();
         $hrefHome = $router->urlFor('home');
         $iduser = $this->data;
-        $user = \app\model\User::where('id','=',$iduser)->first();
+        $user = \app\model\User::where('id', '=', $iduser)->first();
 
         $possessed = $user->borrownotreturned()->get();
         $name = $user->name;
         $surname = $user->surname;
         $possessedborrows = '';
-        foreach($possessed as $borrow)
-        {
-          $title="";
-          $date = $borrow->borrow_date_end;
-          $borrow = $borrow->media()->get();
-          foreach($borrow as $media)
-          {
-            $title = $media->title;
-          }
+        foreach ($possessed as $borrow) {
+            $title = "";
+            $date = $borrow->borrow_date_end;
+            $borrow = $borrow->media()->get();
+            foreach ($borrow as $media) {
+                $title = $media->title;
+            }
 
 
-          $possessedborrows .= <<< EOT
+            $possessedborrows .= <<< EOT
           <ul class="flex_container">
               <li>${title}</li>
               <li>A rendre le ${date}</li>
           </ul>
 EOT;
         }
+
         $html = "";
         $html .= <<<EOT
       <main id="recap_borrow">
@@ -332,55 +388,53 @@ EOT;
         return $html;
     }
 
-    private function renderReturnSummary(){
-      $iduser = $this->data;
-      $user = \app\model\User::where('id','=',$iduser)->first();
+    private function renderReturnSummary()
+    {
+        $iduser = $this->data;
+        $user = \app\model\User::where('id', '=', $iduser)->first();
 
-      $possessed = $user->borrownotreturned()->get();
-      $returned = $user->borrowreturned()->get();
-      $name = $user->name;
-      $surname = $user->surname;
-      $router = new \mf\router\Router();
-      $hrefHome = $router->urlFor('home');
-      $possessedborrows = '';
-      foreach($possessed as $borrow)
-      {
-        $title="";
-        $date = $borrow->borrow_date_end;
-        $borrow = $borrow->media()->get();
-        foreach($borrow as $media)
-        {
-          $title = $media->title;
-        }
+        $possessed = $user->borrownotreturned()->get();
+        $returned = $user->borrowreturned()->get();
+        $name = $user->name;
+        $surname = $user->surname;
+        $router = new \mf\router\Router();
+        $hrefHome = $router->urlFor('home');
+        $possessedborrows = '';
+        foreach ($possessed as $borrow) {
+            $title = "";
+            $date = $borrow->borrow_date_end;
+            $borrow = $borrow->media()->get();
+            foreach ($borrow as $media) {
+                $title = $media->title;
+            }
 
 
-        $possessedborrows .= <<< EOT
+            $possessedborrows .= <<< EOT
         <ul class="flex_container">
             <li>${title}</li>
             <li>A rendre le ${date}</li>
         </ul>
 EOT;
-      }
-      $returnedborrows='';
-      foreach ($returned as $borrow) {
-        $title="";
-        $date = $borrow->borrow_date_end;
-        $borrow = $borrow->media()->get();
-        foreach($borrow as $media)
-        {
-          $title = $media->title;
         }
+        $returnedborrows = '';
+        foreach ($returned as $borrow) {
+            $title = "";
+            $date = $borrow->borrow_date_end;
+            $borrow = $borrow->media()->get();
+            foreach ($borrow as $media) {
+                $title = $media->title;
+            }
 
 
-        $returnedborrows .= <<< EOT
+            $returnedborrows .= <<< EOT
         <ul class="flex_container">
             <li>${title}</li>
             <li>Retourné le ${date}</li>
         </ul>
 EOT;
-      }
-      $html = "";
-      $html .= <<<EOT
+        }
+        $html = "";
+        $html .= <<<EOT
       <main id="recap_return">
           <h2>Adhérent n° ${iduser}, ${name} ${surname} </h2>
           <div class="flex_container">
