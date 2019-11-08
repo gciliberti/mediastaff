@@ -28,39 +28,44 @@ EOT;
 
     }
 
-    public function renderHome(){
-      $route = new \mf\router\Router();
-      $hrefBorrowUser = $route->urlFor('borrowUser');
-      $hrefAddDoc = $route->urlFor('addDoc');
-      $hrefReturn = $route->urlFor('return');
-      $hrefUsers = $route->urlFor('users');
+    public function renderHome()
+    {
+
+        $app_root = (new \mf\utils\HttpRequest())->root;//Pour aller chercher les images
+        $route = new \mf\router\Router();
+        $hrefBorrowUser = $route->urlFor('borrowUser');
+        $hrefAddDoc = $route->urlFor('addDoc');
+        $hrefReturn = $route->urlFor('return');
+        $hrefUsers = $route->urlFor('users');
+
+
 
 
         $html = "";
         $html .= <<< EOT
       <main id="home">
           <nav>
-              <div class="container">
+              <div class="grid_container">
                   <a href="${hrefBorrowUser}">
                       <div class="item__nav">
-                          <img src="#" alt="icone emprunt">
+                          <img src="${app_root}/html/img/books-stack.svg" alt="icone emprunt">
                           <h2>Emprunt</h2>
                       </div>
                   </a>
                   <a href="${hrefReturn}">
-                      <div class="item">
-                          <img src="#" alt="icone retour">
+                      <div class="item__nav">
+                          <img src="${app_root}/html/img/back.svg" alt="icone retour">
                           <h2>Retour</h2>
                       </div>
                   </a>
                   <a href="${hrefUsers}">
-                      <div class="item">
-                          <img src="#" alt="icone utilisateurs">
+                      <div class="item__nav">
+                          <img src="${app_root}/html/img/avatar.svg" alt="icone utilisateurs">
                           <h2>Utilisateurs</h2>
                       </div>
                   </a>
               </div>
-              <a href="${hrefAddDoc}" class="adddoc"> <img src="#" alt="plus"> Ajouter un document</a>
+              <a href="${hrefAddDoc}" class="adddoc"> <img src="${app_root}/html/img/button-plus.svg" alt="plus"> Ajouter un document</a>
           </nav>
       </main>
 EOT;
@@ -83,13 +88,14 @@ EOT;
         return $html;
     }
 
-    public function renderBorrowUser(){
-      $router = new \mf\router\Router();
-      $hrefCheckBorrow = $router->urlFor('borrow');
-      $app_root = (new \mf\utils\HttpRequest())->root;
+    public function renderBorrowUser()
+    {
+        $router = new \mf\router\Router();
+        $hrefCheckBorrow = $router->urlFor('borrow');
+        $app_root = (new \mf\utils\HttpRequest())->root;
 
-      $html = "";
-      $html .= <<<EOT
+        $html = "";
+        $html .= <<<EOT
       <main id="borrow">
           <form method="POST" action="${hrefCheckBorrow}" name="userBorrow">
               <div class="container userBorrow">
@@ -103,22 +109,23 @@ EOT;
           </form>
       </main>
 EOT;
-    return $html;
+        return $html;
     }
 
-    public function renderBorrow(){
-      $router = new \mf\router\Router();
-      $hrefBorrow = $router->urlFor('borrow');
-      $app_root = (new \mf\utils\HttpRequest())->root;
-      $listeEmprunt="";
-      if(!empty($_SESSION['listeEmprunt'])){
-        $listeEmprunt="<h4>Reference déjà ajoutée:</h2>";
-        foreach ($_SESSION['listeEmprunt'] as $emprunt) {
-          $listeEmprunt.="<li>".$emprunt."</li>";
+    public function renderBorrow()
+    {
+        $router = new \mf\router\Router();
+        $hrefBorrow = $router->urlFor('borrow');
+        $app_root = (new \mf\utils\HttpRequest())->root;
+        $listeEmprunt = "";
+        if (!empty($_SESSION['listeEmprunt'])) {
+            $listeEmprunt = "<h4>Reference déjà ajoutée:</h2>";
+            foreach ($_SESSION['listeEmprunt'] as $emprunt) {
+                $listeEmprunt .= "<li>" . $emprunt . "</li>";
+            }
         }
-      }
-      $html = "";
-      $html .= <<<EOT
+        $html = "";
+        $html .= <<<EOT
       <main id="borrow">
           <form method="POST" action="${hrefBorrow}" name="borrow">
               <div class="container borrow">
@@ -139,12 +146,13 @@ EOT;
         return $html;
     }
 
-    private function renderAddDoc(){
-      $router = new \mf\router\Router();
-      $hrefCheckDoc = $router->urlFor('checkDoc');
-          //je n'ai pas le html pour celle la
-      $html = "";
-      $html .= <<<EOT
+    private function renderAddDoc()
+    {
+        $router = new \mf\router\Router();
+        $hrefCheckDoc = $router->urlFor('checkDoc');
+        //je n'ai pas le html pour celle la
+        $html = "";
+        $html .= <<<EOT
       <main id="addDoc">
           <form method="post" action="${hrefCheckDoc}" name="addDoc" enctype="multipart/form-data">
               <div class="container addDoc">
@@ -235,16 +243,9 @@ EOT;
 
         $html = "";
         $html .= <<<EOT
-
       <main id="profil_user">
-
-
 EOT;
-
-
         $user = $this->data;
-
-
         $num = $_GET['num'];
         if ($user != null) {
             $name = $user->name;
@@ -255,10 +256,7 @@ EOT;
             $ville = $user->city;
             $postalcode = $user->postalcode;
             $tel = $user->phone;
-
-
             $html .= <<<EOT
-
            <div class="info">
               <ul>
                   <li>${name} ${surname}</li>
@@ -273,8 +271,8 @@ EOT;
                   <li>${tel}</li>
               </ul>
           </div>
-
 EOT;
+
         } else {
             $html .= <<<EOT
            <div class="error">
@@ -417,9 +415,9 @@ EOT;
                 $content = $this->renderHome();
                 break;
             case 'borrow':
-              $navBar = $this->renderHeader();
-              $content = $this->renderBorrow();
-              break;
+                $navBar = $this->renderHeader();
+                $content = $this->renderBorrow();
+                break;
             case 'borrowUser':
                 $navBar = $this->renderHeader();
                 $content = $this->renderBorrowUser();
