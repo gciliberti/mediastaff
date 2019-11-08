@@ -279,7 +279,7 @@ EOT;
            </div>
 EOT;
         }
-        
+
         $html .= <<<EOT
 
       </main>
