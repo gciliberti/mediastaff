@@ -27,9 +27,9 @@ class AppController extends \mf\control\AbstractController
       $numAdherent = $http->post['numAdherent'];
       $countUser = \app\model\User::where('id', '=', $numAdherent)->count();
       if ($countUser != 1) {//L'utilisateur n'existe pas
-      $vue->render("borrowUser");
-      return;
-    }
+        $vue->render("borrowUser");
+        return;
+      }
       $_SESSION['idBorrower'] = filter_var($http->post['numAdherent'],FILTER_SANITIZE_STRING);//On initialise les variables de session
       $_SESSION['listeEmprunt'] = array();
     } else {
@@ -123,22 +123,22 @@ class AppController extends \mf\control\AbstractController
     $countMediaDispo = \app\model\Media::where('reference', '=', $emprunt)->where('disponibility','=',1)->count();
     if($countMediaDispo!=1){//si le media est déjà emprunté ou indisponible
 
-  }else
-  {
-    $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
-    $mediaId->disponibility = 2;//Le media est emprunté
-    $borrow = new \app\model\Borrow();
-    $dateDuJour = date("Y/m/d");
-    $dateRendu = date('Y-m-d', strtotime($dateDuJour . ' + 14 days'));
-    $borrow->borrow_date_end = $dateRendu;
-    $borrow->returned = 0;
-    $borrow->id_user = $numAdherent;
-    $borrow->id_media = $mediaId->id;
-    $borrow->save();
-    $mediaId->save();
+    }else
+    {
+      $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
+      $mediaId->disponibility = 2;//Le media est emprunté
+      $borrow = new \app\model\Borrow();
+      $dateDuJour = date("Y/m/d");
+      $dateRendu = date('Y-m-d', strtotime($dateDuJour . ' + 14 days'));
+      $borrow->borrow_date_end = $dateRendu;
+      $borrow->returned = 0;
+      $borrow->id_user = $numAdherent;
+      $borrow->id_media = $mediaId->id;
+      $borrow->save();
+      $mediaId->save();
+    }
   }
-}
-$this->viewBorrowSummary();
+  $this->viewBorrowSummary();
 }
 
 public function viewUserInfo()
@@ -199,14 +199,14 @@ public function checkReturn(){
     $http = new \mf\utils\HttpRequest();
     if(isset($http->post['ajout_x'])){
       if (isset($http->post['ref'])){//Si la reference n'est pas vide
-        if(!isset($_SESSION['listeReference'])){
-          $_SESSION['listeReference'] = array();
-        }
-        $refMedia = $http->post['ref'];
-        $countMediaDispo = \app\model\Media::where('reference', '=', $refMedia)->where('disponibility','=',2)->count();
-        if($countMediaDispo==1){//si le media est emprunté et existe
-          $_SESSION['listeReference'][] = filter_var($http->post['ref'],FILTER_SANITIZE_STRING);//on ajoute la reference dans la var de session
-        }
+      if(!isset($_SESSION['listeReference'])){
+        $_SESSION['listeReference'] = array();
+      }
+      $refMedia = $http->post['ref'];
+      $countMediaDispo = \app\model\Media::where('reference', '=', $refMedia)->where('disponibility','=',2)->count();
+      if($countMediaDispo==1){//si le media est emprunté et existe
+        $_SESSION['listeReference'][] = filter_var($http->post['ref'],FILTER_SANITIZE_STRING);//on ajoute la reference dans la var de session
+      }
     }else{//si la reference est vide
       $vue = new \app\view\AppView();
       $vue->render("return");
@@ -235,6 +235,7 @@ public function checkReturn(){
       else{
         $vue = new \app\view\AppView();
         $vue->render("return");
+        return;
       }
     }
   }
@@ -243,7 +244,6 @@ public function checkReturn(){
 }
 catch(\Exception $e)
 {
-
   $vue = new \app\view\AppView($e);
   $vue->render("return");
 }
