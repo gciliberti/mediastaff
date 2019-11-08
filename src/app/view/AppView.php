@@ -14,7 +14,7 @@ class AppView extends \mf\view\AbstractView
         $objRout = new \mf\router\Router();
         $hrefRetour = $objRout->urlFor('home');
         $html .= <<<EOT
-      <nav>
+      <nav class="menu">
         <a href="${hrefRetour}" class="back">
           <img src="${app_root}/html/img/back.svg" width="32" height="32" alt="fleche de retour">
         </a>
@@ -42,7 +42,7 @@ EOT;
         $html = "";
         $html .= <<< EOT
       <main id="home">
-          <nav>
+          <nav class="home">
               <div class="grid_container">
                   <a href="${hrefBorrowUser}">
                       <div class="item__nav">
@@ -181,27 +181,27 @@ EOT;
         $hrefViewUser = $router->urlFor('viewUser');
         $html .= <<<EOT
             <main id="users">
-                <div class="container users" style="border-bottom: 2px solid black">
+            <h1>Utilisateurs</h1>
+            <div class="container users">
+                <p>Demandes d'adhésion :</p>
 EOT;
-        foreach ($users as $value) {
-//            var_dump($users);
-            $surname = $value->surname;
-            $name = $value->name;
-            $num = $value->id;
-            var_dump($num);
-            $app_root = (new \mf\utils\HttpRequest())->root;
-            $picture = $value->photo;
-            if (empty($picture)) {
-                $picture = $app_root . "/html/img/avatar.svg";
-            } else {
-                $picture = "data:image/jpeg;base64," . base64_encode($value->photo);
-            }
+        if (!empty($users)) {
 
-        }
-        if (!empty($num)) {
-            $html .= <<<EOT
-             <div class="item__user__container">
-                  <img src="${picture}" alt="photo de profil" width="50px" height="auto">
+            foreach ($users as $value) {
+                $surname = $value->surname;
+                $name = $value->name;
+                $num = $value->id;
+                $app_root = (new \mf\utils\HttpRequest())->root;
+                $picture = $value->photo;
+                if (empty($picture)) {
+                    $picture = $app_root . "/html/img/avatar.svg";
+                } else {
+                    $picture = "data:image/jpeg;base64," . base64_encode($value->photo);
+                }
+
+                $html .= <<<EOT
+             <div class="item__user__container flex_container">
+                  <img src="${picture}" alt="photo de profil">
                   <p>Adherent numéro : ${num}</p>
                   <p>${name} ${surname}</p>
                   <form name="validate" method="get">
@@ -214,6 +214,8 @@ EOT;
                   </form>
               </div>
 EOT;
+            }
+
         } else {
             $html .= <<<EOT
             <div class="novalidation">
@@ -227,7 +229,7 @@ EOT;
           </div>
 
           <div class="flex_container">
-              <nav>
+              <nav class="user">
                   <a href="">Créer un adhérent</a>
               </nav>
               <div class="item">
@@ -261,9 +263,19 @@ EOT;
             $ville = $user->city;
             $postalcode = $user->postalcode;
             $tel = $user->phone;
+            $app_root = (new \mf\utils\HttpRequest())->root;
+            $picture = $user->photo;
+            if (empty($picture)) {
+                $picture = $app_root . "/html/img/avatar.svg";
+            } else {
+                $picture = "data:image/jpeg;base64," . base64_encode($user->photo);
+            }
             $html .= <<<EOT
             <div class="grid_container">         
                <div class="info">
+                   <div class="img_round">
+                        <img src="${picture}" alt="">
+                   </div>
                   <ul>
                       <li>${name} ${surname}</li>
                       <li>${username}</li>
@@ -283,7 +295,8 @@ EOT;
             $borrowUser = \app\model\User::where('id', '=', $num)->first();
             $possessed = $borrowUser->borrownotreturned()->get();
             $returned = $borrowUser->borrowreturned()->get();
-            $possessedborrows = '';
+
+            $possessedborrows = '<ul class="container">';
             foreach ($possessed as $borrow) {
                 $title = "";
                 $date = $borrow->borrow_date_end;
@@ -296,13 +309,13 @@ EOT;
                 }
 
                 $possessedborrows .= <<< EOT
-        <ul class="container">
             <li>${title}</li>
             <li>A rendre le ${date_end}</li>
-        </ul>
 EOT;
             }
-            $returnedborrows = '';
+            $possessedborrows .= "</ul>";
+
+            $returnedborrows = '<ul class="container">';
             foreach ($returned as $borrow) {
                 $title = "";
                 $date = $borrow->borrow_date_end;
@@ -315,15 +328,14 @@ EOT;
 
 
                 $returnedborrows .= <<< EOT
-        <ul class="container">
             <li>${title}</li>
             <li>Retourné le ${date_end}</li>
-        </ul>
 EOT;
             }
+            $returnedborrows .= "</ul>";
 
             $html .= <<<EOT
-                 <div class="grid_container">
+                 <div class="flex_container">
                     <div class="returned">
                         ${returnedborrows}
                      </div>

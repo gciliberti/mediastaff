@@ -5,8 +5,9 @@ body {
   }
 
   main {
-height: 0;
-    nav {
+    height: 0;
+
+    nav.home {
       padding: 5%;
 
       margin-top: 50vh;
@@ -20,13 +21,14 @@ height: 0;
         a {
           width: 100%;
 
-          background-color: gray;
           grid-column-start: 4 span;
           text-align: center;
           max-height: 40vh;
-          border-radius: 15px;
 
           div.item__nav {
+            background-color: gray;
+            border-radius: 15px;
+            margin-bottom: 5vw;
 
             h2 {
               margin-top: 5vh;
@@ -52,7 +54,7 @@ height: 0;
         font-weight: bold;
         font-size: 1.5em;
 
-        img{
+        img {
           width: 3%;
           height: auto;
           position: relative;

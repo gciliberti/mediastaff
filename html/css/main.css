@@ -20,46 +20,194 @@ html h1, html h2, html h3, html h4 {
   margin: 0; }
 
 html {
-  font-family: 'Roboto', sans-serif; }
+  font-family: 'Roboto', sans-serif;
+  color: #303030; }
   html .flex_container {
     display: flex; }
   html .grid_container {
     display: grid; }
+  html nav.menu {
+    position: relative;
+    top: 20px;
+    left: 5px; }
 
 body main {
   height: 0; }
-  body main nav {
+  body main nav.home {
     padding: 5%;
     margin-top: 50vh;
     transform: translateY(-50%); }
-    body main nav .grid_container {
+    body main nav.home .grid_container {
       grid-template-columns: repeat(12, 1fr);
       grid-column-gap: 5%; }
-      body main nav .grid_container a {
+      body main nav.home .grid_container a {
         width: 100%;
-        background-color: gray;
         grid-column-start: 4 span;
         text-align: center;
-        max-height: 40vh;
-        border-radius: 15px; }
-        body main nav .grid_container a div.item__nav h2 {
-          margin-top: 5vh;
-          margin-bottom: 5vh; }
-        body main nav .grid_container a div.item__nav img {
-          width: 35%;
-          height: auto;
-          padding: 5%; }
-    body main nav a.adddoc {
+        max-height: 40vh; }
+        body main nav.home .grid_container a div.item__nav {
+          background-color: gray;
+          border-radius: 15px;
+          margin-bottom: 5vw; }
+          body main nav.home .grid_container a div.item__nav h2 {
+            margin-top: 5vh;
+            margin-bottom: 5vh; }
+          body main nav.home .grid_container a div.item__nav img {
+            width: 35%;
+            height: auto;
+            padding: 5%; }
+    body main nav.home a.adddoc {
       margin-top: 10vh;
       text-align: center;
       width: 100%;
       display: block;
       font-weight: bold;
       font-size: 1.5em; }
-      body main nav a.adddoc img {
+      body main nav.home a.adddoc img {
         width: 3%;
         height: auto;
         position: relative;
         top: .5vw; }
+
+body main#profil_user .grid_container {
+  grid-template-columns: repeat(12, 1fr); }
+  body main#profil_user .grid_container ul li {
+    margin: 1.5vh 0;
+    font-size: 1.2em; }
+  body main#profil_user .grid_container .info {
+    grid-column: 12 span;
+    text-align: center; }
+    body main#profil_user .grid_container .info .img_round {
+      width: 150px;
+      height: 150px;
+      overflow: hidden;
+      border-radius: 50%;
+      grid-column: 12 span;
+      margin-left: auto;
+      margin-right: auto; }
+      body main#profil_user .grid_container .info .img_round img {
+        width: 100%;
+        height: auto; }
+  body main#profil_user .grid_container .where {
+    grid-column: 12 span;
+    text-align: center; }
+body .flex_container {
+  margin-top: 5vh;
+  justify-content: center;
+  align-content: space-between; }
+  body .flex_container .returned {
+    margin: auto;
+    overflow: hidden scroll;
+    width: auto;
+    height: 15vh;
+    padding: 10px 20px;
+    border: 2px solid #707070;
+    border-radius: 15px; }
+    body .flex_container .returned ul li {
+      text-align: center;
+      font-size: 1.1em;
+      color: #707070; }
+      body .flex_container .returned ul li:nth-child(2n) {
+        text-align: left;
+        border-bottom: 3px solid #E8E8E8;
+        color: black;
+        padding-bottom: 2vh; }
+
+body {
+  overflow-x: hidden; }
+  body main#users {
+    height: auto; }
+    body main#users h1 {
+      color: #707070;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center; }
+    body main#users p:first-child {
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto; }
+    body main#users .container.users {
+      width: auto;
+      max-height: 45vh;
+      overflow: hidden;
+      overflow-y: scroll;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 30vh;
+      transform: translateY(-50%); }
+      body main#users .container.users .flex_container {
+        width: 60%;
+        margin: 2vh auto 0 auto;
+        padding: 10px;
+        align-content: space-evenly;
+        background-color: #E8E8E8;
+        border-radius: 15px; }
+        body main#users .container.users .flex_container img {
+          width: auto;
+          max-height: 5vw;
+          margin-right: 5%; }
+        body main#users .container.users .flex_container p {
+          font-size: 1.2em; }
+          body main#users .container.users .flex_container p:first-of-type {
+            margin-right: 5%; }
+          body main#users .container.users .flex_container p:last-of-type {
+            margin-right: 5%; }
+        body main#users .container.users .flex_container form {
+          margin-left: 0; }
+          body main#users .container.users .flex_container form button {
+            background-color: unset;
+            border: none;
+            cursor: pointer; }
+            body main#users .container.users .flex_container form button:first-of-type {
+              margin-right: 5px; }
+            body main#users .container.users .flex_container form button img {
+              width: 50px;
+              height: 50px; }
+    body main#users .flex_container {
+      align-content: space-evenly;
+      text-align: center;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto; }
+      body main#users .flex_container nav {
+        width: 100%; }
+        body main#users .flex_container nav a {
+          text-align: center;
+          width: 65%;
+          padding: 8px 0;
+          display: block;
+          margin: auto;
+          color: #34B3AA;
+          background-color: #F5F5F5;
+          border: 2px solid #34B3AA;
+          border-radius: 5px;
+          font-family: "Roboto", sans-serif;
+          font-size: 1.2em;
+          max-width: 300px; }
+      body main#users .flex_container .item {
+        width: 100%;
+        text-align: center;
+        margin-top: -5vh; }
+        body main#users .flex_container .item form input {
+          border: none;
+          border-bottom: solid 2px #34B3AA;
+          background-color: #F7F7F7;
+          margin: 8% auto 8% auto;
+          height: 3em;
+          display: block;
+          width: 65%; }
+        body main#users .flex_container .item form button {
+          text-align: center;
+          width: 15%;
+          padding: 8px 0;
+          display: block;
+          margin: auto;
+          color: #34B3AA;
+          background-color: #F5F5F5;
+          border: 2px solid #34B3AA;
+          border-radius: 5px;
+          font-family: "Roboto", sans-serif;
+          font-size: 1.2em;
+          max-width: 300px; }
 
 /*# sourceMappingURL=main.css.map */
