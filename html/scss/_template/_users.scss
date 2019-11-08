@@ -29,7 +29,6 @@ body {
 
       .flex_container {
         width: 60%;
-
         margin: 2vh auto 0 auto;
         padding: 10px;
         align-content: space-evenly;
@@ -116,7 +115,7 @@ body {
             border: none;
             border-bottom: solid 2px $primarycolor;
             background-color: #F7F7F7;
-            margin: 8% auto 8% auto;
+            margin-top:5%;
             height: 3em;
             display: block;
             width: 65%;
@@ -127,7 +126,8 @@ body {
             width: 15%;
             padding: 8px 0;
             display: block;
-            margin: auto;
+            margin-top:5%;
+            margin-left:3%;
             color: $primarycolor;
             background-color: $bc;
             border: 2px solid $primarycolor;

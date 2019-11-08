@@ -26,13 +26,12 @@ body {
           max-height: 40vh;
 
           div.item__nav {
-            background-color: gray;
+            background-color: #bdbdbd;
             border-radius: 15px;
             margin-bottom: 5vw;
 
             h2 {
-              margin-top: 5vh;
-              margin-bottom: 5vh;
+              padding-bottom:1em;
             }
 
             img {
@@ -45,17 +44,21 @@ body {
 
         }
       }
-
+      #searchDoc{
+        grid-column: 1 / span 4;
+      }
       a.adddoc {
-        margin-top: 10vh;
         text-align: center;
         width: 100%;
         display: block;
         font-weight: bold;
         font-size: 1.5em;
+        border: 1px solid grey;
+        grid-column: 9 / span 4;
+        border-radius: 8px;
 
         img {
-          width: 3%;
+          width: 9%;
           height: auto;
           position: relative;
           top: .5vw;
