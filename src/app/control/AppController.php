@@ -74,10 +74,11 @@ class AppController extends \mf\control\AbstractController
   public function viewDoc(){
     $http = new \mf\utils\HttpRequest();
     if (isset($http->get['ref'])) {
-      $media = \app\model\Media::select('*')->where('reference', '=', $http->get['ref'])->first();
+      $reference = filter_var($http->get['ref'],FILTER_SANITIZE_STRING);
+      $media = \app\model\Media::select('*')->where('reference', '=', $reference)->first();
     } else {
     $post = $this->request->post;
-    $ref = $post['ref'];
+    $ref = filter_var($post['ref'],FILTER_SANITIZE_STRING);
     $media = \app\model\Media::select('*')->where('reference', '=', $ref)->first();
   }
     if($media != null){
@@ -112,9 +113,6 @@ class AppController extends \mf\control\AbstractController
      $mediaB = \app\model\Media::select('*')->where('reference', '=', $http->get['ref'])->first();
      $vue = new \app\view\AppView($mediaB);
      $vue->render("viewdoc");
-
-    //header('location: '.$url);
-
   }
 
   public function suppDoc(){
@@ -124,11 +122,6 @@ class AppController extends \mf\control\AbstractController
     $media = \app\model\Media::where('reference', '=', $http->get['ref'])->delete();
 
     header('location: '.$url);
-  }
-
-  public function viewUserRegister(){
-    $vue = new \app\view\AppView();
-    $vue->render("userregister");
   }
 
   public function viewUserRegister()

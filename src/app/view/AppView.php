@@ -28,7 +28,7 @@ EOT;
 
     }
 
-      
+
     public function renderHome()
     {
         $app_root = (new \mf\utils\HttpRequest())->root;//Pour aller chercher les images
@@ -67,7 +67,7 @@ EOT;
                     <input required type="number" name="ref" placeholder="Reference du document">
                     <button type="submit">ok</button>
                 </form>
-              
+
           </nav>
       </main>
 EOT;
@@ -179,13 +179,13 @@ EOT;
           <form method="post" action="${hrefCheckDoc}" name="addDoc" enctype="multipart/form-data">
               <div class="container addDoc">
                 <input required id="title" name="title" value="" placeholder="titre">
-                <input required id="ref" name="ref" value="" placeholder="référence">
+                <input type="number" required id="ref" name="ref" value="" placeholder="référence">
                 <input required id="type" name="type" value="" placeholder="type">
                 <input required id="genre" name="genre" value="" placeholder="genre">
                 <input required id="keywords" name="keywords" value="" placeholder="mots clefs">
                 <div class="picture">
                   <label for="file" class="label-file">ajouter une image</label>
-                  <input required id="file" type="file" name="fileToUpload">
+                  <input required accept="image/png, image/gif, image/jpeg" id="file" type="file" name="fileToUpload">
                 </div>
                 <textarea required id="description" name="description" value="" placeholder="déscription"></textarea>
                 <button type="submit">Valider</button>
