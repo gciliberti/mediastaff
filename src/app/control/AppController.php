@@ -180,6 +180,8 @@ class AppController extends \mf\control\AbstractController
         $iduser = $_SESSION['idBorrower'];
         $vue = new \app\view\AppView($iduser);
         $vue->render("borrowsummary");
+        unset($_SESSION['idBorrower']);
+        unset($_SESSION['listeEmprunt']);
 
     }
 
