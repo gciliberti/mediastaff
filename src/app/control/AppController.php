@@ -293,6 +293,7 @@ public function checkReturn(){
       {
         $iduser = $return->id_user;
         $return->returned = 1;
+		$return->borrow_date_end = date('Y-m-d H:i:s');
         $return->save();
         $media->disponibility=1;
         $media->save();

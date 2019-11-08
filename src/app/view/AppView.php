@@ -536,7 +536,7 @@ EOT;
         $possessedborrows = '';
         foreach ($possessed as $borrow) {
             $title = "";
-            $date = $borrow->borrow_date_end;
+			$date = strftime('%d %B %G', strtotime($borrow->borrow_date_end));
             $borrow = $borrow->media()->get();
             foreach ($borrow as $media) {
                 $title = $media->title;
