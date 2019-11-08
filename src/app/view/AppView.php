@@ -76,6 +76,10 @@ EOT;
         $hrefCheckReturn = $router->urlFor('checkReturn');
         $app_root = (new \mf\utils\HttpRequest())->root;
         $listeReference="";
+        $erreur="";
+        if(isset($this->data)){
+          $erreur=$this->data;
+        }
         if(!empty($_SESSION['listeReference'])){
           $listeReference="<h4>Reference déjà ajoutée:</h4>";
           foreach ($_SESSION['listeReference'] as $reference) {
@@ -84,6 +88,7 @@ EOT;
         }
         $html = "";
         $html .= <<<EOT
+        ${erreur}
       <main id="return">
           <form action="${hrefCheckReturn}" method="post" name="return">
               <input type="text" name="ref" placeholder="Référence">
@@ -102,9 +107,13 @@ EOT;
       $router = new \mf\router\Router();
       $hrefCheckBorrow = $router->urlFor('borrow');
       $app_root = (new \mf\utils\HttpRequest())->root;
-
+      $erreur="";
+      if(isset($this->data)){
+        $erreur=$this->data;
+      }
         $html = "";
         $html .= <<<EOT
+        ${erreur}
       <main id="borrow">
           <form method="POST" action="${hrefCheckBorrow}" name="userBorrow">
               <div class="container userBorrow">

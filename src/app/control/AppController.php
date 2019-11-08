@@ -27,7 +27,8 @@ class AppController extends \mf\control\AbstractController
       $numAdherent = $http->post['numAdherent'];
       $countUser = \app\model\User::where('id', '=', $numAdherent)->count();
       if ($countUser != 1) {//L'utilisateur n'existe pas
-        $vue->render("borrowUser");
+        $vueErreur = new \app\view\AppView("<script>alert(\"L'utilisateur n'existe pas!\")</script>");
+        $vueErreur->render("borrowUser");
         return;
       }
       $_SESSION['idBorrower'] = filter_var($http->post['numAdherent'],FILTER_SANITIZE_STRING);//On initialise les variables de session
@@ -116,7 +117,8 @@ class AppController extends \mf\control\AbstractController
     $countUser = \app\model\User::where('id', '=', $numAdherent)->count();
 
     if ($countUser != 1) {//L'utilisateur n'existe pas
-    $vue->render("borrowUser");
+    $vueErreur = new \app\view\AppView("<script>alert(\"L'utilisateur n'existe pas!\")</script>");
+    $vueErreur->render("borrowUser");
     return;
   }
   foreach ($_SESSION['listeEmprunt'] as $emprunt) {
@@ -216,8 +218,18 @@ public function checkReturn(){
     $vue->render("return");
     return;
   }
-
   //si on a validé
+  if(!isset($_SESSION['listeReference'])){
+    $vue = new \app\view\AppView("<script>alert(\"Aucune référence insérée\")</script>");
+    $vue->render("return");
+    return;
+  }
+  if(empty($_SESSION['listeReference'])){
+    $vue = new \app\view\AppView("<script>alert(\"Aucune référence insérée\")</script>");
+    $vue->render("return");
+    return;
+  }
+
   foreach ($_SESSION['listeReference'] as $reference) {
     $reference = filter_var($reference,FILTER_SANITIZE_STRING);
     $media =  \app\model\Media::where('reference','=',$reference)->first();
