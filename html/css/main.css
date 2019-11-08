@@ -40,6 +40,65 @@ html {
   html div::-webkit-scrollbar {
     display: none; }
 
+body main > form {
+  margin-top: 45vh;
+  transform: translateY(-50%);
+  width: 60%;
+  margin-right: auto;
+  margin-left: auto; }
+body main .container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 20px;
+  max-width: 400px;
+  margin: auto; }
+  body main .container > input {
+    border: none;
+    border-bottom: 1px solid grey; }
+    body main .container > input:first-child {
+      grid-column: 1/7;
+      grid-row: 1; }
+    body main .container > input:nth-child(2) {
+      grid-column: 1/7;
+      grid-row: 2;
+      width: 100%; }
+    body main .container > input:nth-child(3) {
+      grid-column: 1/7;
+      grid-row: 3; }
+    body main .container > input:nth-child(4) {
+      grid-column: 1/7;
+      grid-row: 4; }
+    body main .container > input:nth-child(5) {
+      grid-column: 1/7;
+      grid-row: 5; }
+  body main .container > .picture {
+    grid-column: 1/7;
+    grid-row: 6;
+    min-width: 170px;
+    text-align: center;
+    margin: 15px; }
+    body main .container > .picture > input {
+      display: none; }
+    body main .container > .picture > label {
+      color: grey;
+      background-color: #EEE;
+      border: 1px solid grey;
+      padding: 10px 20px;
+      border-radius: 5%; }
+  body main .container > textarea {
+    grid-column: 1/7;
+    grid-row: 7;
+    height: 100px;
+    border: 1px solid grey; }
+  body main .container > button {
+    grid-column: 2/6;
+    grid-row: 8;
+    padding: 10px 20px;
+    background-color: #EEE;
+    color: grey;
+    border: 1px solid grey;
+    border-radius: 5%; }
+
 body main#borrow form {
   margin-top: 35vh;
   transform: translateY(-50%); }
@@ -112,65 +171,6 @@ body main#recap_borrow {
       font-family: "Roboto", sans-serif;
       font-size: 1.2em;
       max-width: 300px; }
-
-body main > form {
-  margin-top: 45vh;
-  transform: translateY(-50%);
-  width: 60%;
-  margin-right: auto;
-  margin-left: auto; }
-body main .container {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-gap: 20px;
-  max-width: 400px;
-  margin: auto; }
-  body main .container > input {
-    border: none;
-    border-bottom: 1px solid grey; }
-    body main .container > input:first-child {
-      grid-column: 1/7;
-      grid-row: 1; }
-    body main .container > input:nth-child(2) {
-      grid-column: 1/7;
-      grid-row: 2;
-      width: 100%; }
-    body main .container > input:nth-child(3) {
-      grid-column: 1/7;
-      grid-row: 3; }
-    body main .container > input:nth-child(4) {
-      grid-column: 1/7;
-      grid-row: 4; }
-    body main .container > input:nth-child(5) {
-      grid-column: 1/7;
-      grid-row: 5; }
-  body main .container > .picture {
-    grid-column: 1/7;
-    grid-row: 6;
-    min-width: 170px;
-    text-align: center;
-    margin: 15px; }
-    body main .container > .picture > input {
-      display: none; }
-    body main .container > .picture > label {
-      color: grey;
-      background-color: #EEE;
-      border: 1px solid grey;
-      padding: 10px 20px;
-      border-radius: 5%; }
-  body main .container > textarea {
-    grid-column: 1/7;
-    grid-row: 7;
-    height: 100px;
-    border: 1px solid grey; }
-  body main .container > button {
-    grid-column: 2/6;
-    grid-row: 8;
-    padding: 10px 20px;
-    background-color: #EEE;
-    color: grey;
-    border: 1px solid grey;
-    border-radius: 5%; }
 
 body main {
   height: 0; }
