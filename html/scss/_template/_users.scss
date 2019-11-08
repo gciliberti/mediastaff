@@ -1,10 +1,153 @@
-body{
+body {
+  overflow-x: hidden;
 
-  header{
+  header {
 
   }
 
-  main{
+  main#users {
+    height: auto;
+
+    h1 {
+      color: $secondarycolor;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    p:first-child {
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+
+    .container.users {
+      width: auto;
+      max-height: 45vh;
+      overflow: hidden;
+      overflow-y: scroll;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 30vh;
+      transform: translateY(-50%);
+
+
+      .flex_container {
+        width: 60%;
+        margin: 2vh auto 0 auto;
+        padding: 10px;
+        align-content: space-evenly;
+        background-color: $terciarycolor;
+        border-radius: 15px;
+
+        img {
+          width: auto;
+          max-height: 5vw;
+          margin-right: 5%;
+        }
+
+        p {
+          font-size: 1.2em;
+
+          &:first-of-type {
+            margin-right: 5%;
+          }
+
+          &:last-of-type {
+            margin-right: 5%;
+          }
+        }
+
+        form {
+          margin-left: 0;
+
+          button {
+            background-color: unset;
+            border: none;
+            cursor: pointer;
+
+            &:first-of-type {
+              margin-right: 5px;
+            }
+
+
+            img {
+
+              width: 50px;
+              height: 50px;
+
+            }
+          }
+
+
+        }
+      }
+    }
+
+    .flex_container {
+      align-content: space-evenly;
+      text-align: center;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+
+      nav {
+        width: 100%;
+
+        a {
+          text-align: center;
+          width: 65%;
+          padding: 8px 0;
+          display: block;
+          margin: auto;
+          color: $primarycolor;
+          background-color: $bc;
+          border: 2px solid $primarycolor;
+          border-radius: 5px;
+          font-family: $font;
+          font-size: 1.2em;
+          max-width: 300px;
+        }
+      }
+
+      .item {
+        width: 100%;
+        text-align: center;
+        margin-top: -5vh;
+
+        form {
+          input {
+            border: none;
+            border-bottom: solid 2px $primarycolor;
+            background-color: #F7F7F7;
+            margin-top:5%;
+            height: 3em;
+            display: block;
+            width: 65%;
+          }
+
+          button {
+            text-align: center;
+            width: 15%;
+            padding: 8px 0;
+            display: block;
+            margin-top:5%;
+            margin-left:3%;
+            color: $primarycolor;
+            background-color: $bc;
+            border: 2px solid $primarycolor;
+            border-radius: 5px;
+            font-family: $font;
+            font-size: 1.2em;
+            max-width: 300px;
+
+
+          }
+        }
+
+      }
+    }
 
   }
 

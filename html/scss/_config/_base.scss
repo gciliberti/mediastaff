@@ -2,12 +2,24 @@
 
 
 // initialisation des variables
+$primarycolor: #34B3AA;
+$secondarycolor: #707070;
+$terciarycolor: #E8E8E8;
+$quartuarycolor: #F3F3F3;
+
+$dispo_color: #43AB28;
+$indispo_color: #E12012;
+$retour_color: #E1A912;
+$bc: #F5F5F5;
+$font: 'Roboto', sans-serif;
+$font_color: #303030;
 
 $font: 'Roboto', sans-serif;
 
 
 html {
   font-family: 'Roboto', sans-serif;
+  color: $font_color;
 
   .flex_container {
     display: flex;
@@ -17,6 +29,11 @@ html {
     display: grid;
   }
 
+  nav.menu{
+    position: relative;
+    top: 20px;
+    left: 5px;
+  }
 
 
 }
