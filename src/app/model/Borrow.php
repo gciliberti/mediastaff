@@ -9,5 +9,7 @@ class Borrow extends \Illuminate\Database\Eloquent\Model{
   public function media(){
     return $this->belongsTo('app\model\Media','id_media');
   }
+
+
 }
  ?>
