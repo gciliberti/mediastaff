@@ -62,7 +62,6 @@ class AppController extends \mf\control\AbstractController
     {
 
         if (!empty($_GET['accept']) || !empty($_GET['delete'])) {
-
             \mf\router\Router::executeRoute('userModify');
         } else {
             $users = \app\model\User::where('isvalidated', '=', 0)->get();
@@ -79,13 +78,14 @@ class AppController extends \mf\control\AbstractController
     {
 
         if (!empty($_GET['accept'])) {
-            $user = \app\model\User::where('id', '=', $_GET['accept'])->first();
+
+            $user = \app\model\User::where('id', '=', filter_var($_GET['accept'], FILTER_SANITIZE_NUMBER_INT))->first();
             $user->isvalidated = 1;
             $user->save();
             unset ($_GET['accept']);
             \mf\router\Router::executeRoute('users');
         } elseif (!empty($_GET['delete'])) {
-            $user = \app\model\User::where('id', '=', $_GET['delete'])->first();
+            $user = \app\model\User::where('id', '=' , filter_var($_GET['accept'], FILTER_SANITIZE_NUMBER_INT))->first();
             $user->delete();
 
 
