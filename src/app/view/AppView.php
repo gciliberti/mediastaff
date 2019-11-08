@@ -422,8 +422,9 @@ EOT;
                 $title = $media->title;
             }
 
-            $possessedborrows .= <<< EOT
-        <ul class="flex_container">
+
+        $possessedborrows .= <<< EOT
+        <ul>
             <li>${title}</li>
             <li>A rendre le ${date}</li>
         </ul>
@@ -441,8 +442,9 @@ EOT;
           $title = $media->title;
         }
 
-            $returnedborrows .= <<< EOT
-        <ul class="flex_container">
+
+        $returnedborrows .= <<< EOT
+        <ul>
             <li>${title}</li>
             <li>Retourné le ${date} </li>
         </ul>
@@ -451,8 +453,9 @@ EOT;
         $html = "";
         $html .= <<<EOT
       <main id="recap_return">
+          <h1>Récapitulatif de retour</h1>
           <h2>Adhérent n° ${iduser}, ${name} ${surname} </h2>
-          <div class="flex_container">
+          <div class="grid_container">
               <div class="item__return">
                   <h3>Documents retournés</h3>
                   ${returnedborrows}
