@@ -78,6 +78,21 @@ $router->addRoute('checkDoc',
 '\app\control\AppController',
 'checkDoc',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
 
+$router->addRoute('viewDoc',
+'/viewDoc/',
+'\app\control\AppController',
+'viewDoc',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+$router->addRoute('suppDoc',
+'/suppDoc/',
+'\app\control\AppController',
+'suppDoc',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
+$router->addRoute('modifyDoc',
+'/modifyDoc/',
+'\app\control\AppController',
+'modifyDoc',\app\auth\AppAuthentification::ACCESS_LEVEL_NONE);
+
 
 $router->setDefaultRoute('/home/');
 

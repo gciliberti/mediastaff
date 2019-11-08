@@ -32,6 +32,7 @@ EOT;
       $route = new \mf\router\Router();
       $hrefBorrow = $route->urlFor('borrow');
       $hrefAddDoc = $route->urlFor('addDoc');
+      $hrefViewDoc = $route->urlFor('viewDoc');
       $hrefReturn = $route->urlFor('return');
       $hrefUsers = $route->urlFor('users');
 
@@ -61,6 +62,10 @@ EOT;
                   </a>
               </div>
               <a href="${hrefAddDoc}" class="adddoc"> <img src="#" alt="plus"> Ajouter un document</a>
+              <form id="searchDoc" method="post" action="${hrefViewDoc}" name="viewDoc">
+                    <input required type="number" name="ref" placeholder="Reference du document">
+                    <button type="submit">ok</button>
+                </form>
           </nav>
       </main>
 EOT;
@@ -166,6 +171,85 @@ EOT;
 EOT;
     return $html;
     }
+
+    private function renderViewDoc(){
+      $router = new \mf\router\Router();
+      $http = new \mf\utils\HttpRequest();
+      $media = $this->data;
+      $title = $media['title'];
+      $reference = $media['reference'];
+      $hrefViewDoc = $router->urlFor('viewDoc', ['action' => 'modify', 'ref' => $reference]);
+      $hrefModifyDoc = $router->urlFor('modifyDoc', ['ref' => $reference]);
+      $hrefSuppDoc = $router->urlFor('suppDoc', ['ref' => $reference]);
+      $description = $media['description'];
+      $genre = $media['genre'];
+      $type = $media['type'];
+      $keywords = $media['keywords'];
+      $disponibility = $media['disponibility'];
+      switch ($disponibility) {
+          case '0':
+            $disponibility = 'indisponible';
+            break;
+          case '1':
+            $disponibility = 'disponible';
+            break;
+          case '2':
+            $disponibility = 'emprunté';
+            break;
+          }
+      $picture = "data:image/jpeg;base64,".base64_encode($media->picture);
+
+      if (isset($http->get['action']) && $http->get['action'] === 'modify') {
+        $html = <<<EOT
+        <main id="search_doc">
+          <div class="item_doc">
+            <form class="conntect" method="post" action="${hrefModifyDoc}" enctype="multipart/form-data">
+            <div id="image">
+             <div>
+                <img src="${picture}" width="64" height="64" alt="photo de l'utilisateur">
+              </div>
+              <label for="file" class="label-file">parcourir...</label>
+              <input id="file" type="file" name="fileToUpload" accept="image/png, image/gif, image/jpeg" id="fileToUpload">
+            </div>
+              <input required id="title" name="title" value="${title}">
+              <p>${reference}</p>
+              <input required id="type" name="type" value="${type}">
+              <input required id="genre" name="genre" value="${genre}">
+              <textarea required id="description" name="description" value="${description}">${description}</textarea>
+              <input required id="keywords" name="keywords" value="${keywords}">
+              <select required name="disponibility" id="disponibility">
+                <option value="0">indisponible</option>
+                <option value="1">disponible</option>
+                <option value="2">emprunté</option>
+              </select>
+            </div>
+            <input class="button-empty" type="submit" value="valider">
+          </form>
+        </main>
+EOT;
+
+      } else {
+      $html = <<<EOT
+      <main id="search_doc">
+        <div class="item_doc">
+            <img src="${picture}" width="64" height="64" alt="image du dcoument">
+            <h3>${title}</h3>
+            <p>${reference}</p>
+            <p>${type}/${genre}</p>
+            <p>${description}</p>
+            <p>${keywords}</p>
+            <p>${disponibility}</p>
+        </div>
+        <div class="buttons">
+          <a href="${hrefViewDoc}"><img src=""><input class="button-empty" type="button" value="Modifier"></a>
+          <a href="${hrefSuppDoc}"><img src=""><input class="button-empty" type="button" value="Supprimer"></a>
+        </div>
+      </main>
+EOT;
+}
+    return $html;
+    }
+
 
     private function renderUserInfo(){
       $html = "";
@@ -280,6 +364,16 @@ EOT;
             case 'adddoc' :
               $navBar = $this->renderHeader();
               $content = $this->renderAddDoc();
+              break;
+
+            case 'viewdoc' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderViewDoc();
+              break;
+
+            case 'modifydoc' :
+              $navBar = $this->renderHeader();
+              $content = $this->renderViewDoc();
               break;
 
             case 'userregister' :
