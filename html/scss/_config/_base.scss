@@ -35,6 +35,25 @@ html {
     left: 5px;
   }
 
+  main{
+    height: auto;
+    h1 {
+      color: $secondarycolor;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+  }
+
+  div{
+    &::-webkit-scrollbar{
+      display: none;
+    }
+  }
+
+
+
+
 
 }
 

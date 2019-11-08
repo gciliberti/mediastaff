@@ -71,24 +71,26 @@ class AppController extends \mf\control\AbstractController
 
   }
 
-  public function viewDoc(){
-    $http = new \mf\utils\HttpRequest();
-    if (isset($http->get['ref'])) {
-      $reference = filter_var($http->get['ref'],FILTER_SANITIZE_STRING);
-      $media = \app\model\Media::select('*')->where('reference', '=', $reference)->first();
-    } else {
-      $post = $this->request->post;
-      $ref = filter_var($post['ref'],FILTER_SANITIZE_STRING);
-      $media = \app\model\Media::select('*')->where('reference', '=', $ref)->first();
+
+    public function viewDoc()
+    {
+        $http = new \mf\utils\HttpRequest();
+        if (isset($http->get['ref'])) {
+            $reference = filter_var($http->get['ref'], FILTER_SANITIZE_STRING);
+            $media = \app\model\Media::select('*')->where('reference', '=', $reference)->first();
+        } else {
+            $post = $this->request->post;
+            $ref = filter_var($post['ref'], FILTER_SANITIZE_STRING);
+            $media = \app\model\Media::select('*')->where('reference', '=', $ref)->first();
+        }
+        if ($media != null) {
+            $vue = new \app\view\AppView($media);
+            $vue->render("viewdoc");
+        } else {
+            $vue = new \app\view\AppView();
+            $vue->render("home");
+        }
     }
-    if($media != null){
-      $vue = new \app\view\AppView($media);
-      $vue->render("viewdoc");
-    } else {
-      $vue = new \app\view\AppView();
-      $vue->render("home");
-    }
-  }
 
   public function modifyDoc(){
     $http = new \mf\utils\HttpRequest();
@@ -101,19 +103,19 @@ class AppController extends \mf\control\AbstractController
     $disponibility = filter_var($post["disponibility"],FILTER_SANITIZE_STRING);
     $keywords = filter_var($post["keywords"],FILTER_SANITIZE_STRING);
 
-    if($_FILES['fileToUpload']['tmp_name'] != ""){
-      $picture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
-      $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['picture' => $picture]);
+        if ($_FILES['fileToUpload']['tmp_name'] != "") {
+            $picture = file_get_contents($_FILES['fileToUpload']['tmp_name']);
+            $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['picture' => $picture]);
+        }
+
+        $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['title' => $title,
+            'genre' => $genre, 'type' => $type, 'description' => $description,
+            'keywords' => $keywords, 'disponibility' => $disponibility]);
+
+        $mediaB = \app\model\Media::select('*')->where('reference', '=', $http->get['ref'])->first();
+        $vue = new \app\view\AppView($mediaB);
+        $vue->render("viewdoc");
     }
-
-    $media = \app\model\Media::where('reference', '=', $http->get['ref'])->update(['title' => $title,
-    'genre' => $genre, 'type' => $type, 'description' => $description,
-    'keywords' => $keywords, 'disponibility' => $disponibility]);
-
-    $mediaB = \app\model\Media::select('*')->where('reference', '=', $http->get['ref'])->first();
-    $vue = new \app\view\AppView($mediaB);
-    $vue->render("viewdoc");
-  }
 
   public function suppDoc(){
     $http = new \mf\utils\HttpRequest();
