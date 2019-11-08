@@ -46,19 +46,19 @@ EOT;
               <div class="grid_container">
                   <a href="${hrefBorrowUser}">
                       <div class="item__nav">
-                          <img src="${app_root}/html/img/books-stack.svg" alt="icone emprunt">
+                          <img src="${app_root}/html/img/emprunt.svg" alt="icone emprunt">
                           <h2>Emprunt</h2>
                       </div>
                   </a>
                   <a href="${hrefReturn}">
                       <div class="item__nav">
-                          <img src="${app_root}/html/img/back.svg" alt="icone retour">
+                          <img src="${app_root}/html/img/retour.svg" alt="icone retour">
                           <h2>Retour</h2>
                       </div>
                   </a>
                   <a href="${hrefUsers}">
                       <div class="item__nav">
-                          <img src="${app_root}/html/img/avatar.svg" alt="icone utilisateurs">
+                          <img src="${app_root}/html/img/avatarHome.svg" alt="icone utilisateurs">
                           <h2>Utilisateurs</h2>
                       </div>
                   </a>
