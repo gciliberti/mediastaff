@@ -21,12 +21,12 @@ class AppController extends \mf\control\AbstractController
         $vue = new \app\view\AppView();
         $http = new \mf\utils\HttpRequest();
         if (isset($http->post['numAdherent'])) {//si on vient de userBorrow
-            $_SESSION['idBorrower'] = $http->post['numAdherent'];//On initialise les variables de session
+            $_SESSION['idBorrower'] = filter_var($http->post['numAdherent'],FILTER_SANITIZE_STRING);//On initialise les variables de session
             $_SESSION['listeEmprunt'] = array();
         } else {
             if (isset($_SESSION['idBorrower'])) {//si on vient de Borrow
                 if (isset($http->post['mediaRef'])) {//si la ref a bien été remplie
-                    $_SESSION['listeEmprunt'][] = $http->post['mediaRef'];
+                    $_SESSION['listeEmprunt'][] = filter_var($http->post['mediaRef'],FILTER_SANITIZE_STRING);
                     if (isset($http->post["valider"])) {//si on a validé on envoi sur checkBorrow
                         $this->checkBorrow();
                         return;
@@ -62,6 +62,7 @@ class AppController extends \mf\control\AbstractController
     {
 
         if (!empty($_GET['accept']) || !empty($_GET['delete'])) {
+
             \mf\router\Router::executeRoute('userModify');
         } else {
             $users = \app\model\User::where('isvalidated', '=', 0)->get();
@@ -87,11 +88,17 @@ class AppController extends \mf\control\AbstractController
             $user = \app\model\User::where('id', '=', $_GET['delete'])->first();
             $user->delete();
 
+
             unset ($_GET['delete']);
             \mf\router\Router::executeRoute('users');
         }
     }
 
+
+    public function viewReturnSummary($iduser=null){
+        $vue = new \app\view\AppView($iduser);
+        $vue->render("returnsummary");
+    }
     public function checkBorrow()
     {
         $http = new \mf\utils\HttpRequest();
@@ -106,7 +113,9 @@ class AppController extends \mf\control\AbstractController
         foreach ($_SESSION['listeEmprunt'] as $emprunt) {
             $countMedia = \app\model\Media::where('reference', '=', $emprunt)->count();
             if ($countMedia != 1) {//Le media n'existe pas
-                $vue->render("borrow");
+                unset($_SESSION['listeEmprunt']);
+                unset($_SESSION['idBorrower']);
+                $vue->render('viewBorrowUser');
                 return;
             }
             $mediaId = \app\model\Media::where('reference', '=', $emprunt)->first();
@@ -121,7 +130,8 @@ class AppController extends \mf\control\AbstractController
             $borrow->save();
             $mediaId->save();
         }
-        $vue->render("borrowSummary");
+             $this->viewBorrowSummary();
+
     }
 
     public function viewUserInfo()
@@ -171,21 +181,47 @@ class AppController extends \mf\control\AbstractController
 
     public function viewBorrowSummary()
     {
-        $vue = new \app\view\AppView();
+        $iduser = $_SESSION['idBorrower'];
+        $vue = new \app\view\AppView($iduser);
         $vue->render("borrowsummary");
+        unset($_SESSION['idBorrower']);
+        unset($_SESSION['listeEmprunt']);
 
     }
 
-    public function viewReturnSummary()
-    {
+  public function checkReturn(){
+    //Doit effectuer un retour en BDD et rediriger vers returnSummary
+    try{
+      $http = new \mf\utils\HttpRequest();
+      $reference = filter_var($http->post["ref"],FILTER_SANITIZE_STRING);
+      $media =  \app\model\Media::where('reference','=',$reference)->first();
+      if($media != null)
+      {
+          $return = $media->borrownotreturned()->first();
+          if($return != null)
+          {
+            $iduser = $return->id_user;
+            $return->returned = 1;
+            $return->save();
+            $this->viewReturnSummary($iduser);
+          }
+          else{
+            $vue = new \app\view\AppView();
+            $vue->render("return");
+          }
+      }
+      else{
         $vue = new \app\view\AppView();
-        $vue->render("returnsummary");
+        $vue->render("return");
+      }
 
     }
-
-
-    public function checkReturn()
+    catch(\Exception $e)
     {
-        //Doit effectuer un retour en BDD et rediriger vers returnSummary
+
+      $vue = new \app\view\AppView($e);
+      $vue->render("return");
     }
+
+  }
 }

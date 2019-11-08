@@ -77,7 +77,7 @@ EOT;
         $html = "";
         $html .= <<<EOT
       <main id="return">
-          <form action="${hrefCheckReturn}" name="return">
+          <form action="${hrefCheckReturn}" method="post" name="return">
               <input type="text" name="ref" placeholder="Référence">
               <button type="submit">Valider</button>
           </form>
@@ -275,7 +275,7 @@ EOT;
             $html .= <<<EOT
            <div class="error">
                 <p>Attention l'adhérent numéro ${num} n'éxiste pas !</p>
-           
+
            </div>
 EOT;
         }
@@ -289,25 +289,40 @@ EOT;
 
     private function renderBorrowSummary()
     {
+        $iduser = $this->data;
         $router = new \mf\router\Router();
         $hrefHome = $router->urlFor('home');
+        $iduser = $this->data;
+        $user = \app\model\User::where('id','=',$iduser)->first();
+
+        $possessed = $user->borrownotreturned()->get();
+        $name = $user->name;
+        $surname = $user->surname;
+        $possessedborrows = '';
+        foreach($possessed as $borrow)
+        {
+          $title="";
+          $date = $borrow->borrow_date_end;
+          $borrow = $borrow->media()->get();
+          foreach($borrow as $media)
+          {
+            $title = $media->title;
+          }
+
+
+          $possessedborrows .= <<< EOT
+          <ul class="flex_container">
+              <li>${title}</li>
+              <li>A rendre le ${date}</li>
+          </ul>
+EOT;
+        }
         $html = "";
         $html .= <<<EOT
       <main id="recap_borrow">
           <div>
-              <h3>Adhérent numéro 14</h3>
-              <ul class="flex_container">
-                  <li>Titre 1</li>
-                  <li>A retourner le 22/10</li>
-              </ul>
-              <ul class="flex_container">
-                  <li>Titre 3</li>
-                  <li>A retourner le 22/10</li>
-              </ul>
-              <ul class="flex_container">
-                  <li>Titre 4</li>
-                  <li>A retourner le 22/10</li>
-              </ul>
+              <h3>Adhérent n° ${iduser}, ${name} ${surname} </h3>
+                ${possessedborrows}
           </div>
           <nav>
               <a href="${hrefHome}" id="nav_recap_borrow">ok</a>
@@ -317,37 +332,65 @@ EOT;
         return $html;
     }
 
-    private function renderReturnSummary()
-    {
-        $router = new \mf\router\Router();
-        $hrefHome = $router->urlFor('home');
-        $html = "";
-        $html .= <<<EOT
+    private function renderReturnSummary(){
+      $iduser = $this->data;
+      $user = \app\model\User::where('id','=',$iduser)->first();
+
+      $possessed = $user->borrownotreturned()->get();
+      $returned = $user->borrowreturned()->get();
+      $name = $user->name;
+      $surname = $user->surname;
+      $router = new \mf\router\Router();
+      $hrefHome = $router->urlFor('home');
+      $possessedborrows = '';
+      foreach($possessed as $borrow)
+      {
+        $title="";
+        $date = $borrow->borrow_date_end;
+        $borrow = $borrow->media()->get();
+        foreach($borrow as $media)
+        {
+          $title = $media->title;
+        }
+
+
+        $possessedborrows .= <<< EOT
+        <ul class="flex_container">
+            <li>${title}</li>
+            <li>A rendre le ${date}</li>
+        </ul>
+EOT;
+      }
+      $returnedborrows='';
+      foreach ($returned as $borrow) {
+        $title="";
+        $date = $borrow->borrow_date_end;
+        $borrow = $borrow->media()->get();
+        foreach($borrow as $media)
+        {
+          $title = $media->title;
+        }
+
+
+        $returnedborrows .= <<< EOT
+        <ul class="flex_container">
+            <li>${title}</li>
+            <li>Retourné le ${date}</li>
+        </ul>
+EOT;
+      }
+      $html = "";
+      $html .= <<<EOT
       <main id="recap_return">
-          <h2>Adhérent</h2>
+          <h2>Adhérent n° ${iduser}, ${name} ${surname} </h2>
           <div class="flex_container">
               <div class="item__return">
                   <h3>Documents retournés</h3>
-                  <ul class="flex_container">
-                      <li>Titre 1</li>
-                      <li>Retourné le 22/10</li>
-                  </ul>
-                  <ul class="flex_container">
-                      <li>Titre 3</li>
-                      <li>Retourné le 22/10</li>
-                  </ul>
-                  <ul class="flex_container">
-                      <li>Titre 4</li>
-                      <li>Retourné le 22/10</li>
-                  </ul>
+                  ${returnedborrows}
               </div>
               <div class="item__return">
                   <h3>Documents possédés</h3>
-
-                  <ul class="flex_container">
-                      <li>Titre 1</li>
-                      <li>A retourner le 22/10</li>
-                  </ul>
+                    ${possessedborrows}
               </div>
           </div>
           <nav>
