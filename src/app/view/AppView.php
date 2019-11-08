@@ -67,7 +67,7 @@ EOT;
                     <button type="submit">ok</button>
                 </form>
               </div>
-             
+
 
           </nav>
       </main>
@@ -155,7 +155,7 @@ EOT;
               <div class="container borrow">
                   <div class="item borrow">
                       <input name="mediaRef" type="text" placeholder="Référence du document">
-                      <input name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+                      <input class="add" name="Ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
                       <ul>
                         ${listeEmprunt}
                       </ul>
