@@ -1,35 +1,53 @@
-body{
+body {
 
-  header{
+  header {
 
   }
 
-  #return{
-    h2{
-      text-align: center;
-    }
-    form{
+  main#return {
+    form {
 
-      display: block;
-      margin: auto;
-      width: 80%;
-      text-align: center;
-      margin-top:20%;
+      margin-top: 35vh;
+      transform: translateY(-50%);
 
-      input{
-        width : 25%;
-        padding : 0;
+
+      input {
+        border: none;
+        border-bottom: solid 2px $primarycolor;
+        background-color: #F7F7F7;
+        margin: 8% auto 8% auto;
+        height: 3em;
+        display: block;
+        width: 30%;
+        &:first-of-type{
+          margin-bottom: 3vh;
+
+        }
+
+        &.add {
+          background-color: unset;
+          border: none;
+          position: relative;
+          margin: 0 auto 3vh auto;
+        }
+
       }
-      button{
+
+      button {
+        text-align: center;
+        width: 15%;
+        padding: 8px 0;
         display: block;
         margin: auto;
-        text-align: center;
-        box-sizing: border-box;
-        width : 25%;
-        padding : 0;
+        color: $primarycolor;
+        background-color: $bc;
+        border: 2px solid $primarycolor;
+        border-radius: 5px;
+        font-family: $font;
+        font-size: 1.2em;
+        max-width: 300px;
       }
     }
-
   }
 
 }

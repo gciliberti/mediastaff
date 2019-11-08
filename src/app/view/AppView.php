@@ -97,7 +97,7 @@ EOT;
       <main id="return">
           <form action="${hrefCheckReturn}" method="post" name="return">
               <input type="text" name="ref" placeholder="Référence">
-              <input required name="ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
+              <input class="add" required name="ajout" type="image" src="${app_root}/html/img/button-plus.svg" width="32" height="32" alt="Ajout"/>
               <ul>
                 ${listeReference}
               </ul>
