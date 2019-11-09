@@ -149,7 +149,8 @@ class AppController extends \mf\control\AbstractController
       unset ($_GET['accept']);
       \mf\router\Router::executeRoute('users');
     } elseif (!empty($_GET['delete'])) {
-      $user = \app\model\User::where('id', '=' , filter_var($_GET['accept'], FILTER_SANITIZE_NUMBER_INT))->first();
+	var_dump($_GET);
+      $user = \app\model\User::where('id', '=' , filter_var($_GET['delete'], FILTER_SANITIZE_NUMBER_INT))->first();
       $user->delete();
       unset ($_GET['delete']);
       \mf\router\Router::executeRoute('users');
