@@ -27,7 +27,7 @@ class AppController extends \mf\control\AbstractController
       $numAdherent = $http->post['numAdherent'];
       $countUser = \app\model\User::where('id', '=', $numAdherent)->where('isValidated','=', 1)->count();
       if ($countUser != 1) {//L'utilisateur n'existe pas
-        $vueErreur = new \app\view\AppView("<script>alert(\"L'utilisateur n'existe pas!\")</script>");
+        $vueErreur = new \app\view\AppView("<script>alert(\"L'utilisateur n'existe pas ou n'est pas vérifié!\")</script>");
         $vueErreur->render("borrowUser");
         return;
       }
